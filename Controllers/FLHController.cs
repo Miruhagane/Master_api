@@ -13,10 +13,12 @@ using System.Net.Mail;
 using System.Data.SqlClient;
 using System.Data;
 using HttpGetAttribute = System.Web.Http.HttpGetAttribute;
+using System.Text;
+using System.Net.Mime;
 
 namespace Queue.Controllers
 {
-  
+
     public class FLHController : Controller
     {
         string con = System.Configuration.ConfigurationManager.ConnectionStrings["FLHConnection"].ConnectionString;
@@ -76,14 +78,14 @@ namespace Queue.Controllers
                         evento2 = evento2,
                         evento3 = evento3,
                         msn = 1
-                        
+
                     };
 
                     lst.Add(lst1);
 
                     return Json(lst, JsonRequestBehavior.AllowGet);
                 }
-                else 
+                else
                 {
                     var bsQRacom = db.Tb_RegistroAcompañantes.FirstOrDefault(x => x.Txt_QR == QR);
 
@@ -122,7 +124,7 @@ namespace Queue.Controllers
 
                     }
 
-                    else 
+                    else
                     {
                         lstEvento lst1 = new lstEvento()
                         {
@@ -148,7 +150,7 @@ namespace Queue.Controllers
             }
 
 
-           
+
         }
 
         [HttpGet]
@@ -161,11 +163,11 @@ namespace Queue.Controllers
                 var c = u.Token(email).ToString();
                 q = c;
             }
-            catch(Exception er)
+            catch (Exception er)
             {
                 return er.Message.ToString();
             }
-              
+
             return q;
         }
 
@@ -176,7 +178,7 @@ namespace Queue.Controllers
             return confirm;
         }
 
-       // [HttpGet]
+        // [HttpGet]
         public bool Password([System.Web.Http.FromBody] string token, string password, string name, long number, string email)
         {
             try
@@ -190,46 +192,46 @@ namespace Queue.Controllers
                 u.Details(token, password, name, number, email);
                 return true;
             }
-            catch(Exception we)
+            catch (Exception we)
             {
 
             }
             return false;
         }
-    
+
         [HttpGet]
-        public string Login(  string email, string password)
+        public string Login(string email, string password)
         {
             IAccount a = new IAccount();
-            string res = "2";        
+            string res = "2";
             try
             {
                 var confirmation = a.Login(email, password);
-                if(confirmation != null)
+                if (confirmation != null)
                 {
                     res = confirmation;
                     return res;
                 }
             }
             catch (Exception er)
-            { 
+            {
             }
             return res;
         }
 
 
-    
+
         public string Insert(string token, string email, long number, string name, bool e1, bool e2, bool e3)
         {
             IAccount a = new IAccount();
             string res = "";
 
-                res = a.Insert(token, email, number, name, e1, e2, e3).ToString();
+            res = a.Insert(token, email, number, name, e1, e2, e3).ToString();
 
             return res;
         }
 
-        public JsonResult mail() 
+        public JsonResult mail()
         {
 
             string res = "";
@@ -241,7 +243,7 @@ namespace Queue.Controllers
 
             for (int i = 0; i < count; i++)
             {
-                var invitadomail = db.Tb_ListadoInvitados.FirstOrDefault(x => x.Int_IdInvitado == i && x.Int_Status == 0 );
+                var invitadomail = db.Tb_ListadoInvitados.FirstOrDefault(x => x.Int_IdInvitado == i && x.Int_Status == 0);
 
                 if (invitadomail != null)
                 {
@@ -249,7 +251,7 @@ namespace Queue.Controllers
 
                     int num_enviado = Convert.ToInt32(invitadomail.Num_Enviado) + 1;
 
-                    SqlDataAdapter da = new SqlDataAdapter("update Tb_ListadoInvitados set Num_Enviado = "+num_enviado+", Fec_Enviado = GETDATE() where Int_IdInvitado = "+invitadomail.Int_IdInvitado+"", con);
+                    SqlDataAdapter da = new SqlDataAdapter("update Tb_ListadoInvitados set Num_Enviado = " + num_enviado + ", Fec_Enviado = GETDATE() where Int_IdInvitado = " + invitadomail.Int_IdInvitado + "", con);
                     DataTable dt = new DataTable();
                     da.Fill(dt);
 
@@ -261,25 +263,34 @@ namespace Queue.Controllers
             {
                 string fecha = DateTime.Now.ToString("dddd MM yyyy");
 
-                string mailemisor2 = "soporteti@masterexchange.com.mx";
-                string mailreceptor2 = correos;
-                string mailoculto2 = "asantos@strategias.mx, omartinez@cecgroup.mx";
-                string contraseña2 = "sistemas2021";
-                string strngHtml = @"<html>
-                                <body style='text-align: center' >
-                                <img src='./Content/Email.png'>
-                                 <a href='http://fbx40.com/' style='
-                                    position: absolute;
-                                            top: 95%;
-                                            left: 46%;
-                                            transform: translate(-50 %, -50 %);
-                                            '> <h2>Enlace</h2></a> 
-                                   '</body></html>'";
 
-                MailMessage msng2 = new MailMessage(mailemisor2, mailreceptor2, "Pagos " + fecha + " ", strngHtml);
-                msng2.Bcc.Add(mailoculto2);
+                string mailemisor2 = "fbx40tulum@gmail.com";
+                string mailreceptor2 = "jcenteno@cecgroup.mx";
+
+                string contraseña2 = "fabricio21";
+                string text = "";
+                AlternateView plainView =
+                    AlternateView.CreateAlternateViewFromString(text,
+                                            Encoding.UTF8,
+                                            MediaTypeNames.Text.Plain);
+                string html = "<body text-align: center;>" +
+                    "<img src='cid:imagen' style='width:95%;' />" +
+                    " <a href='http://fbx40.com/' style='text-align: center;'" +
+                    " '> <h2>Registro para el evento</h2></a>  " +
+                    "</body>";
+                AlternateView htmlView = AlternateView.CreateAlternateViewFromString(html,
+                                            Encoding.UTF8,
+                                            MediaTypeNames.Text.Html);
+                string ruta = System.Environment.CurrentDirectory;
+                LinkedResource img = new LinkedResource(ruta + "\\Content\\Email.png",
+                             MediaTypeNames.Image.Jpeg);
+                img.ContentId = "imagen";
+                htmlView.LinkedResources.Add(img);
+                MailMessage msng2 = new MailMessage(mailemisor2, mailreceptor2, "Evento FBX40 " + fecha + " ", "");
                 msng2.IsBodyHtml = true;
-                msng2.Body = strngHtml;
+                msng2.AlternateViews.Add(plainView);
+                msng2.AlternateViews.Add(htmlView);
+
 
                 SmtpClient smtpClient2 = new SmtpClient("smtp.gmail.com");
                 smtpClient2.EnableSsl = true;
@@ -292,10 +303,11 @@ namespace Queue.Controllers
 
                 res = "1";
             }
-            else {
+            else
+            {
 
 
-                res = "2"; 
+                res = "2";
             }
 
             return Json(res, JsonRequestBehavior.AllowGet);
@@ -303,12 +315,12 @@ namespace Queue.Controllers
 
 
         }
-        
 
-        public IEnumerable<InvitadosEvento> exist(  string token)
+
+        public IEnumerable<InvitadosEvento> exist(string token)
         {
             IAccount a = new IAccount();
-            IEnumerable<InvitadosEvento> list = a.Exists(token);               
+            IEnumerable<InvitadosEvento> list = a.Exists(token);
 
             return list;
         }
@@ -324,9 +336,9 @@ namespace Queue.Controllers
             string contraseña = "FLH40fest!";
             int i = 0;
             var res = new MailMessage();
-            foreach(var x in u)
+            foreach (var x in u)
             {
-                mailreceptor = u[i].Txt_Correo; 
+                mailreceptor = u[i].Txt_Correo;
                 i++;
                 MailMessage msg = new MailMessage(mailemisor, mailreceptor, "Reporte General Master Exchange ", "mensaje");
 
