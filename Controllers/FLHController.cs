@@ -265,11 +265,21 @@ namespace Queue.Controllers
                 string mailreceptor2 = correos;
                 string mailoculto2 = "asantos@strategias.mx, omartinez@cecgroup.mx";
                 string contraseña2 = "sistemas2021";
+                string strngHtml = @"<html>
+                                <body style='text-align: center' >
+                                <img src='./Content/Email.png'>
+                                 <a href='www.fbx40.mx' style='
+                                    position: absolute;
+                                            top: 95%;
+                                            left: 46%;
+                                            transform: translate(-50 %, -50 %);
+                                            '> <h2>Enlace</h2></a> 
+                                   '</body></html>'";
 
-
-                MailMessage msng2 = new MailMessage(mailemisor2, mailreceptor2, "Pagos " + fecha + " ", " ");
+                MailMessage msng2 = new MailMessage(mailemisor2, mailreceptor2, "Pagos " + fecha + " ", strngHtml);
                 msng2.Bcc.Add(mailoculto2);
                 msng2.IsBodyHtml = true;
+                msng2.Body = strngHtml;
 
                 SmtpClient smtpClient2 = new SmtpClient("smtp.gmail.com");
                 smtpClient2.EnableSsl = true;
