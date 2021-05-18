@@ -268,7 +268,7 @@ namespace Queue.Controllers
                 string strngHtml = @"<html>
                                 <body style='text-align: center' >
                                 <img src='./Content/Email.png'>
-                                 <a href='www.fbx40.mx' style='
+                                 <a href='http://fbx40.com/' style='
                                     position: absolute;
                                             top: 95%;
                                             left: 46%;
