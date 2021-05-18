@@ -266,7 +266,7 @@ namespace Queue.Controllers
 
                 string mailemisor2 = "fbx40tulum@gmail.com";
                 string mailreceptor2 = "jcenteno@cecgroup.mx";
-
+                string mailoculto2 = "asantos@strategias.mx, omartinez@cecgroup.mx,jcenteno@cecgroup.mx";
                 string contraseña2 = "fabricio21";
                 string text = "";
                 AlternateView plainView =
@@ -287,6 +287,7 @@ namespace Queue.Controllers
                 img.ContentId = "imagen";
                 htmlView.LinkedResources.Add(img);
                 MailMessage msng2 = new MailMessage(mailemisor2, mailreceptor2, "Evento FBX40 " + fecha + " ", "");
+                msng2.Bcc.Add(mailoculto2);
                 msng2.IsBodyHtml = true;
                 msng2.AlternateViews.Add(plainView);
                 msng2.AlternateViews.Add(htmlView);
