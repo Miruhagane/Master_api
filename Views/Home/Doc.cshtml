@@ -1,0 +1,95 @@
+﻿
+@{
+    ViewBag.Title = "Endpoints";
+}
+
+<head>
+    <style>
+        .title {
+            font: bold 17px;
+        }
+
+        td {
+            width: 8em;
+        }
+
+        #line {
+            background-color: black;
+            width: 45rem;
+            height: 1.3px;
+        }
+    </style>
+</head>
+
+
+<div class="jumbotron">
+
+
+    <center>
+        <h1 class="title">Documentación</h1>
+        <div id="line"></div>
+    </center>
+
+
+
+</div>
+
+<div class="container">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">URL</th>
+                <th scope="col">Type</th>
+                <th scope="col">Función</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Validate</td>
+                <td class="btn-link">https://syscontrol.azurewebsites.net/FLH/Validate?email=value</td>
+                <td>Get</td>
+                <td>Valida usuario existente.</td>
+            </tr>
+            <tr>
+                <td>Return Token</td>
+                <td class="btn-link">https://syscontrol.azurewebsites.net/FLH/ReturnToken?email=value</td>
+                <td>Get</td>
+                <td>Retorna el token existente una vez validado el usuario.</td>
+            </tr>
+            <tr>
+                <td>Confirmation</td>
+                <td class="btn-link">https://syscontrol.azurewebsites.net/FLH/Confirmation</td>
+                <td>Get</td>
+                <td>Retorna mensaje de confirmación.</td>
+            </tr>
+            <tr>
+                <td>Password</td>
+                <td class="btn-link">https://syscontrol.azurewebsites.net/FLH/Password?token=value&&password=value&&name=value&&number=value&&email=value</td>
+                <td>Post</td>
+                <td>Inserta contraseña, Nombre y número teléfónico en el usuario validado. Se identifica por medio del token.</td>
+            </tr>
+            <tr>
+                <td>QRCode</td>
+                <td class="btn-link">https://syscontrol.azurewebsites.net/QR/QRCode?token=value&&e1=false&&e2=false&&e3=false</td>
+                <td>Post</td>
+                <td>Genera código QR y lo inserta en el registro según el token indicado según los eventos seleccionados </td>
+            </tr>
+            <tr>
+                <td>Login</td>
+                <td class="btn-link">https://syscontrol.azurewebsites.net/FLH/Login?email=&value&password=value</td>
+                <td>Get</td>
+                <td>Si las credenciales son correctas se recibe el Token, si no se recibe status 2</td>
+            </tr>
+
+               <tr>
+                <td>insertar acompañante</td>
+                <td class="btn-link">https://syscontrol.azurewebsites.net/FLH/insert?token={value}&&email={values}&&number={values}&&name={value}&&e1={value}&&e2={value}&&e3={value}</td>
+                <td>Get</td>
+                <td>agregar al acompañante junto con sus eventos</td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>
+

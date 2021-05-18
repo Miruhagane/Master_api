@@ -1,0 +1,297 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="FLHModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Ct_Eventos">
+          <Key>
+            <PropertyRef Name="Int_IdEvento" />
+          </Key>
+          <Property Name="Int_IdEvento" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Txt_Evento" Type="nvarchar" MaxLength="20" />
+          <Property Name="Txt_EventoCode" Type="nvarchar" MaxLength="3" />
+        </EntityType>
+        <EntityType Name="Tb_EventosAcompañante">
+          <Key>
+            <PropertyRef Name="Int_IdRegistro" />
+          </Key>
+          <Property Name="Int_IdRegistro" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Int_IdAcompañante" Type="int" />
+          <Property Name="Bol_Evento1" Type="bit" />
+          <Property Name="Bol_Evento2" Type="bit" />
+          <Property Name="Bol_Evento3" Type="bit" />
+          <Property Name="Fec_Alta" Type="datetime" />
+          <Property Name="Bol_Validado" Type="int" />
+        </EntityType>
+        <EntityType Name="Tb_EventosInvitado">
+          <Key>
+            <PropertyRef Name="Int_IdRegistro" />
+          </Key>
+          <Property Name="Int_IdRegistro" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Int_IdInvitado" Type="int" />
+          <Property Name="Bol_Evento1" Type="bit" />
+          <Property Name="Bol_Evento2" Type="bit" />
+          <Property Name="Bol_Evento3" Type="bit" />
+          <Property Name="Fec_Alta" Type="datetime" />
+          <Property Name="Bol_Validado" Type="int" />
+        </EntityType>
+        <EntityType Name="Tb_InvitadoAcompañante">
+          <Key>
+            <PropertyRef Name="Int_Idregistro" />
+          </Key>
+          <Property Name="Int_Idregistro" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Int_IdInvitado" Type="int" Nullable="false" />
+          <Property Name="Int_idAcompañante" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tb_ListadoInvitados">
+          <Key>
+            <PropertyRef Name="Int_IdInvitado" />
+          </Key>
+          <Property Name="Int_IdInvitado" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Txt_Correo" Type="nvarchar" MaxLength="70" />
+          <Property Name="Txt_Nombre" Type="nvarchar" MaxLength="50" />
+          <Property Name="Int_Status" Type="int" />
+          <Property Name="Num_Enviado" Type="int" />
+          <Property Name="Fec_Enviado" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Tb_RegistroAcompañantes">
+          <Key>
+            <PropertyRef Name="Int_IdRegistro" />
+          </Key>
+          <Property Name="Int_IdRegistro" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Txt_Correo" Type="nvarchar" MaxLength="70" />
+          <Property Name="Txt_Nombre" Type="nvarchar" MaxLength="50" />
+          <Property Name="Num_Telefono" Type="decimal" Precision="10" Scale="0" />
+          <Property Name="Fec_Alta" Type="datetime" />
+          <Property Name="Txt_QR" Type="nvarchar" MaxLength="30" />
+          <Property Name="Int_Status" Type="int" />
+        </EntityType>
+        <EntityType Name="Tb_RegistroInvitados">
+          <Key>
+            <PropertyRef Name="Int_IdRegistro" />
+          </Key>
+          <Property Name="Int_IdRegistro" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Txt_Correo" Type="nvarchar" MaxLength="70" />
+          <Property Name="Txt_Nombre" Type="nvarchar" MaxLength="50" />
+          <Property Name="Txt_Contraseña" Type="varchar" MaxLength="20" />
+          <Property Name="Num_Telefono" Type="decimal" Precision="10" Scale="0" />
+          <Property Name="Fec_Alta" Type="datetime" />
+          <Property Name="Txt_Token" Type="nvarchar" MaxLength="20" />
+          <Property Name="Txt_QR" Type="nvarchar" MaxLength="30" />
+          <Property Name="Int_Status" Type="int" />
+        </EntityType>
+        <EntityContainer Name="FLHModelStoreContainer">
+          <EntitySet Name="Ct_Eventos" EntityType="Self.Ct_Eventos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tb_EventosAcompañante" EntityType="Self.Tb_EventosAcompañante" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tb_EventosInvitado" EntityType="Self.Tb_EventosInvitado" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tb_InvitadoAcompañante" EntityType="Self.Tb_InvitadoAcompañante" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tb_ListadoInvitados" EntityType="Self.Tb_ListadoInvitados" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tb_RegistroAcompañantes" EntityType="Self.Tb_RegistroAcompañantes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tb_RegistroInvitados" EntityType="Self.Tb_RegistroInvitados" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="FLHModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Ct_Eventos">
+          <Key>
+            <PropertyRef Name="Int_IdEvento" />
+          </Key>
+          <Property Name="Int_IdEvento" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Txt_Evento" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Txt_EventoCode" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Tb_EventosAcompañante">
+          <Key>
+            <PropertyRef Name="Int_IdRegistro" />
+          </Key>
+          <Property Name="Int_IdRegistro" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Int_IdAcompañante" Type="Int32" />
+          <Property Name="Bol_Evento1" Type="Boolean" />
+          <Property Name="Bol_Evento2" Type="Boolean" />
+          <Property Name="Bol_Evento3" Type="Boolean" />
+          <Property Name="Fec_Alta" Type="DateTime" Precision="3" />
+          <Property Name="Bol_Validado" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Tb_EventosInvitado">
+          <Key>
+            <PropertyRef Name="Int_IdRegistro" />
+          </Key>
+          <Property Name="Int_IdRegistro" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Int_IdInvitado" Type="Int32" />
+          <Property Name="Bol_Evento1" Type="Boolean" />
+          <Property Name="Bol_Evento2" Type="Boolean" />
+          <Property Name="Bol_Evento3" Type="Boolean" />
+          <Property Name="Fec_Alta" Type="DateTime" Precision="3" />
+          <Property Name="Bol_Validado" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Tb_ListadoInvitados">
+          <Key>
+            <PropertyRef Name="Int_IdInvitado" />
+          </Key>
+          <Property Name="Int_IdInvitado" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Txt_Correo" Type="String" MaxLength="70" FixedLength="false" Unicode="true" />
+          <Property Name="Txt_Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Int_Status" Type="Int32" />
+          <Property Name="Num_Enviado" Type="Int32" />
+          <Property Name="Fec_Enviado" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="Tb_RegistroAcompañantes">
+          <Key>
+            <PropertyRef Name="Int_IdRegistro" />
+          </Key>
+          <Property Name="Int_IdRegistro" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Txt_Correo" Type="String" MaxLength="70" FixedLength="false" Unicode="true" />
+          <Property Name="Txt_Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Num_Telefono" Type="Decimal" Precision="10" Scale="0" />
+          <Property Name="Fec_Alta" Type="DateTime" Precision="3" />
+          <Property Name="Txt_QR" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Int_Status" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Tb_RegistroInvitados">
+          <Key>
+            <PropertyRef Name="Int_IdRegistro" />
+          </Key>
+          <Property Name="Int_IdRegistro" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Txt_Correo" Type="String" MaxLength="70" FixedLength="false" Unicode="true" />
+          <Property Name="Txt_Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Txt_Contraseña" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Num_Telefono" Type="Decimal" Precision="10" Scale="0" />
+          <Property Name="Fec_Alta" Type="DateTime" Precision="3" />
+          <Property Name="Txt_Token" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Txt_QR" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Int_Status" Type="Int32" />
+        </EntityType>
+        <EntityContainer Name="FLHEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Ct_Eventos" EntityType="Self.Ct_Eventos" />
+          <EntitySet Name="Tb_EventosAcompañante" EntityType="Self.Tb_EventosAcompañante" />
+          <EntitySet Name="Tb_EventosInvitado" EntityType="Self.Tb_EventosInvitado" />
+          <EntitySet Name="Tb_ListadoInvitados" EntityType="Self.Tb_ListadoInvitados" />
+          <EntitySet Name="Tb_RegistroAcompañantes" EntityType="Self.Tb_RegistroAcompañantes" />
+          <EntitySet Name="Tb_RegistroInvitados" EntityType="Self.Tb_RegistroInvitados" />
+          <EntitySet Name="Tb_InvitadoAcompañante" EntityType="FLHModel.Tb_InvitadoAcompañante" />
+        </EntityContainer>
+        <EntityType Name="Tb_InvitadoAcompañante">
+          <Key>
+            <PropertyRef Name="Int_Idregistro" />
+          </Key>
+          <Property Name="Int_Idregistro" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Int_IdInvitado" Type="Int32" Nullable="false" />
+          <Property Name="Int_idAcompañante" Type="Int32" Nullable="false" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="FLHModelStoreContainer" CdmEntityContainer="FLHEntities">
+          <EntitySetMapping Name="Ct_Eventos">
+            <EntityTypeMapping TypeName="FLHModel.Ct_Eventos">
+              <MappingFragment StoreEntitySet="Ct_Eventos">
+                <ScalarProperty Name="Int_IdEvento" ColumnName="Int_IdEvento" />
+                <ScalarProperty Name="Txt_Evento" ColumnName="Txt_Evento" />
+                <ScalarProperty Name="Txt_EventoCode" ColumnName="Txt_EventoCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tb_EventosAcompañante">
+            <EntityTypeMapping TypeName="FLHModel.Tb_EventosAcompañante">
+              <MappingFragment StoreEntitySet="Tb_EventosAcompañante">
+                <ScalarProperty Name="Int_IdRegistro" ColumnName="Int_IdRegistro" />
+                <ScalarProperty Name="Int_IdAcompañante" ColumnName="Int_IdAcompañante" />
+                <ScalarProperty Name="Bol_Evento1" ColumnName="Bol_Evento1" />
+                <ScalarProperty Name="Bol_Evento2" ColumnName="Bol_Evento2" />
+                <ScalarProperty Name="Bol_Evento3" ColumnName="Bol_Evento3" />
+                <ScalarProperty Name="Fec_Alta" ColumnName="Fec_Alta" />
+                <ScalarProperty Name="Bol_Validado" ColumnName="Bol_Validado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tb_EventosInvitado">
+            <EntityTypeMapping TypeName="FLHModel.Tb_EventosInvitado">
+              <MappingFragment StoreEntitySet="Tb_EventosInvitado">
+                <ScalarProperty Name="Int_IdRegistro" ColumnName="Int_IdRegistro" />
+                <ScalarProperty Name="Int_IdInvitado" ColumnName="Int_IdInvitado" />
+                <ScalarProperty Name="Bol_Evento1" ColumnName="Bol_Evento1" />
+                <ScalarProperty Name="Bol_Evento2" ColumnName="Bol_Evento2" />
+                <ScalarProperty Name="Bol_Evento3" ColumnName="Bol_Evento3" />
+                <ScalarProperty Name="Fec_Alta" ColumnName="Fec_Alta" />
+                <ScalarProperty Name="Bol_Validado" ColumnName="Bol_Validado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tb_ListadoInvitados">
+            <EntityTypeMapping TypeName="FLHModel.Tb_ListadoInvitados">
+              <MappingFragment StoreEntitySet="Tb_ListadoInvitados">
+                <ScalarProperty Name="Int_IdInvitado" ColumnName="Int_IdInvitado" />
+                <ScalarProperty Name="Txt_Correo" ColumnName="Txt_Correo" />
+                <ScalarProperty Name="Txt_Nombre" ColumnName="Txt_Nombre" />
+                <ScalarProperty Name="Int_Status" ColumnName="Int_Status" />
+                <ScalarProperty Name="Num_Enviado" ColumnName="Num_Enviado" />
+                <ScalarProperty Name="Fec_Enviado" ColumnName="Fec_Enviado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tb_RegistroAcompañantes">
+            <EntityTypeMapping TypeName="FLHModel.Tb_RegistroAcompañantes">
+              <MappingFragment StoreEntitySet="Tb_RegistroAcompañantes">
+                <ScalarProperty Name="Int_IdRegistro" ColumnName="Int_IdRegistro" />
+                <ScalarProperty Name="Txt_Correo" ColumnName="Txt_Correo" />
+                <ScalarProperty Name="Txt_Nombre" ColumnName="Txt_Nombre" />
+                <ScalarProperty Name="Num_Telefono" ColumnName="Num_Telefono" />
+                <ScalarProperty Name="Fec_Alta" ColumnName="Fec_Alta" />
+                <ScalarProperty Name="Txt_QR" ColumnName="Txt_QR" />
+                <ScalarProperty Name="Int_Status" ColumnName="Int_Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tb_RegistroInvitados">
+            <EntityTypeMapping TypeName="FLHModel.Tb_RegistroInvitados">
+              <MappingFragment StoreEntitySet="Tb_RegistroInvitados">
+                <ScalarProperty Name="Int_IdRegistro" ColumnName="Int_IdRegistro" />
+                <ScalarProperty Name="Txt_Correo" ColumnName="Txt_Correo" />
+                <ScalarProperty Name="Txt_Nombre" ColumnName="Txt_Nombre" />
+                <ScalarProperty Name="Txt_Contraseña" ColumnName="Txt_Contraseña" />
+                <ScalarProperty Name="Num_Telefono" ColumnName="Num_Telefono" />
+                <ScalarProperty Name="Fec_Alta" ColumnName="Fec_Alta" />
+                <ScalarProperty Name="Txt_Token" ColumnName="Txt_Token" />
+                <ScalarProperty Name="Txt_QR" ColumnName="Txt_QR" />
+                <ScalarProperty Name="Int_Status" ColumnName="Int_Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tb_InvitadoAcompañante">
+            <EntityTypeMapping TypeName="FLHModel.Tb_InvitadoAcompañante">
+              <MappingFragment StoreEntitySet="Tb_InvitadoAcompañante">
+                <ScalarProperty Name="Int_idAcompañante" ColumnName="Int_idAcompañante" />
+                <ScalarProperty Name="Int_IdInvitado" ColumnName="Int_IdInvitado" />
+                <ScalarProperty Name="Int_Idregistro" ColumnName="Int_Idregistro" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
