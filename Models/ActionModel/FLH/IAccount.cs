@@ -202,5 +202,60 @@ namespace Queue.Models.ActionModel.FLH
             return list;
         }
 
+        public List<Tb_RegistroInvitados> ListRegistroInvitados()
+        {
+            List<Tb_RegistroInvitados> lista = new List<Tb_RegistroInvitados>();
+            lista = db.Tb_RegistroInvitados.ToList();
+
+            //using (SqlConnection sql = new SqlConnection(con))
+            //{
+            //    sql.Open();
+            //    string query = "select Txt_Correo,Txt_QR from Tb_RegistroInvitados";
+
+            //    SqlDataAdapter da = new SqlDataAdapter(query, sql);
+            //    DataSet a = new DataSet();
+            //    da.Fill(a);
+            //    ListRegistroInvitados u = new ListRegistroInvitados();
+            //    for (int e = 0; e < a.Tables[0].Rows.Count; e++)
+            //    {
+            //        if (a.Tables[0].Rows.Count > 0)
+            //        {
+            //            u.Txt_Correo = a.Tables[0].Rows[e]["Txt_Correo"].ToString();
+            //             u.Txt_QR = a.Tables[0].Rows[e]["Txt_QR"].ToString();
+            //        }
+            //        lista.Add(u);
+            //    }
+            //    sql.Close();
+            //}
+            return lista;
+        }
+        public List<Tb_RegistroAcompañantes> ListRegistroAcompanantes()
+        {
+
+            List<Tb_RegistroAcompañantes> lista = new List<Tb_RegistroAcompañantes>();
+            lista = db.Tb_RegistroAcompañantes.ToList();
+            //using (SqlConnection sql = new SqlConnection(con))
+            //{
+            //    sql.Open();
+            //    string query = "select Txt_Correo,Txt_QR from Tb_RegistroAcompañantes";
+
+            //    SqlDataAdapter da = new SqlDataAdapter(query, sql);
+            //    DataSet a = new DataSet();
+            //    da.Fill(a);
+            //    ListRegistroAcompanante u = new ListRegistroAcompanante();
+            //    for (int e = 0; e < a.Tables[0].Rows.Count; e++)
+            //    {
+            //        if (a.Tables[0].Rows.Count > 0)
+            //        {
+            //            u.Txt_Correo = a.Tables[0].Rows[e]["Txt_Correo"].ToString();
+            //            u.Txt_QR = a.Tables[0].Rows[e]["Txt_QR"].ToString();
+            //        }
+            //        lista.Add(u);
+            //    }
+            //    sql.Close();
+            //}
+            return lista;
+        }
+
     }
 }

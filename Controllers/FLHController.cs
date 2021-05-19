@@ -15,6 +15,10 @@ using System.Data;
 using HttpGetAttribute = System.Web.Http.HttpGetAttribute;
 using System.Text;
 using System.Net.Mime;
+using System.IO;
+using ZXing;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace Queue.Controllers
 {
@@ -265,7 +269,7 @@ namespace Queue.Controllers
 
 
                 string mailemisor2 = "fbx40tulum@gmail.com";
-                string mailreceptor2 = "jcenteno@cecgroup.mx";
+                string mailreceptor2 = correos;
                 string mailoculto2 = "asantos@strategias.mx, omartinez@cecgroup.mx,jcenteno@cecgroup.mx";
                 string contraseña2 = "fabricio21";
                 string text = "";
@@ -274,18 +278,20 @@ namespace Queue.Controllers
                                             Encoding.UTF8,
                                             MediaTypeNames.Text.Plain);
                 string html = "<body text-align: center;>" +
-                    "<img src='cid:imagen' style='width:95%;' />" +
-                    " <a href='http://fbx40.com/' style='text-align: center;'" +
-                    " '> <h2>Registro para el evento</h2></a>  " +
+                    "<img src='cid:imagen' style='width:85%; height: 60%;' />" +
+                    " <a href='http://fbx40.com/' style='text-align: center;margin-left: 33%; background:linear-gradient(to bottom, #dda60f 5%, #d36217 100%);background-color:#e6a313; border-radius:22px;border: 2px solid #cc8b11;display: inline-block;color:#ffffff;font-family:Arial;font-size:8px;padding: 10px 38px;text-decoration:none;text-shadow:0px 1px 0px #2f6627;'> <h2>Registro para el evento</h2></a> " +
                     "</body>";
-                AlternateView htmlView = AlternateView.CreateAlternateViewFromString(html,
+                AlternateView htmlView =
+                    AlternateView.CreateAlternateViewFromString(html,
                                             Encoding.UTF8,
                                             MediaTypeNames.Text.Html);
-                string ruta = System.Environment.CurrentDirectory;
-                LinkedResource img = new LinkedResource(ruta + "\\Content\\Email.png",
+                string path2 = System.Environment.CurrentDirectory;
+                LinkedResource img =
+                    new LinkedResource(path2 + "\\Content\\Email.png",
                              MediaTypeNames.Image.Jpeg);
                 img.ContentId = "imagen";
                 htmlView.LinkedResources.Add(img);
+
                 MailMessage msng2 = new MailMessage(mailemisor2, mailreceptor2, "Evento FBX40 " + fecha + " ", "");
                 msng2.Bcc.Add(mailoculto2);
                 msng2.IsBodyHtml = true;
@@ -314,7 +320,6 @@ namespace Queue.Controllers
             return Json(res, JsonRequestBehavior.AllowGet);
 
 
-
         }
 
 
@@ -330,39 +335,206 @@ namespace Queue.Controllers
 
         public JsonResult MailSender()
         {
+            string fecha = DateTime.Now.ToString("dddd MM yyyy");
             IAccount a = new IAccount();
-            string mailemisor = "flh40fest@gmail.com";
             List<ListaInvitados> u = a.Invitados();
-            string mailreceptor = "";
-            string contraseña = "FLH40fest!";
             int i = 0;
             var res = new MailMessage();
-            foreach (var x in u)
-            {
-                mailreceptor = u[i].Txt_Correo;
-                i++;
-                MailMessage msg = new MailMessage(mailemisor, mailreceptor, "Reporte General Master Exchange ", "mensaje");
+            string mailemisor2 = "fbx40tulum@gmail.com";
+            string mailreceptor2 = "jcenteno@cecgroup.mx";
+            string mailoculto2 = "";//"asantos@strategias.mx, omartinez@cecgroup.mx";
+            string contraseña2 = "fabricio21";
+            string text = "";
+            AlternateView plainView = AlternateView.CreateAlternateViewFromString(text,Encoding.UTF8, MediaTypeNames.Text.Plain);          
 
-                SmtpClient client = new SmtpClient("smtp.gmail.com");
+            string platilla = "<!DOCTYPE html>" +
+                "<html lang = 'en'>" +
+                "<head><meta charset = 'UTF-8' ></head >" +
+                "<style>" +
+                ".bodycont{width: 64rem;max-height: fit-content;" +
+                "height:52rem;align-items: flex-end; display: flex;}" +
+                ".image{position: absolute;height: 15rem;width: 15rem;margin - bottom: 1rem;top: 18rem;left: 13rem;z-index: 1;}" +
+                 ".image2{position:absolute;height:35rem; width:40rem;z-index:-1;}"+
+                "</style>" +
+                "<body style='text-align: center;'>" +                
+                  "<DIV STYLE = 'position:absolute; top:36px; left:240px; visibility:visible z-index:-1' >" +
+                   "<IMG SRC='cid:imagenFondo' height='250px' width='600px'></div>" +
+                    "<DIV STYLE ='text-align:center;position:absolute; top:287px; left:462px; visibility:visible z-index:1'>" +
+                   "<IMG height='160px' width='160px' SRC='cid:imagen'></div>" +
+                   //"</div>" +
+                   "</body></html>";
+            AlternateView htmlView = AlternateView.CreateAlternateViewFromString(platilla,Encoding.UTF8,MediaTypeNames.Text.Html);
+            string imagePath2 = "~\\Images\\emialQR2.png";
+            string rutafondo = Server.MapPath(imagePath2);
+            LinkedResource img2 = new LinkedResource(rutafondo,MediaTypeNames.Image.Jpeg);
+
+            img2.ContentId = "imagenFondo";
+            htmlView.LinkedResources.Add(img2);
+
+            // para obtner el qr
+            string cadenaqr = "OU5BT8OPU7C5Z1ZPZUWEZX8FWFYDV9";
+            string imagePath = "~\\Images\\" + cadenaqr + ".jpg";
+            string barcodePath = Server.MapPath(imagePath);
+
+            LinkedResource img = new LinkedResource(barcodePath,MediaTypeNames.Image.Jpeg);
+            img.ContentId = "imagen";
+            htmlView.LinkedResources.Add(img);
+           
+            MailMessage msg = new MailMessage(mailemisor2, mailreceptor2, "Evento FBX40" + fecha + " ", "");
+               // msg.Bcc.Add(mailoculto2);
+                msg.IsBodyHtml = true;
+                msg.AlternateViews.Add(htmlView);
+
+            SmtpClient client = new SmtpClient("smtp.gmail.com");
                 client.EnableSsl = true;
                 client.UseDefaultCredentials = false;
                 client.Port = 587;
-                client.Credentials = new System.Net.NetworkCredential(mailemisor, contraseña);
+                client.Credentials = new System.Net.NetworkCredential(mailemisor2, contraseña2);
 
                 client.Send(msg);
                 client.Dispose();
                 res = msg;
-            }
 
+            //foreach (var x in u)
+            //{
+            //    mailemisor2 = u[i].Txt_Correo;
+             
+            //    i++;
+            //    MailMessage msg = new MailMessage(mailemisor2, mailreceptor2, "Evento FBX40"+ fecha + " ", "");
 
+            //    SmtpClient client = new SmtpClient("smtp.gmail.com");
+            //    client.EnableSsl = true;
+            //    client.UseDefaultCredentials = false;
+            //    client.Port = 587;
+            //    client.Credentials = new System.Net.NetworkCredential(mailemisor2, contraseña2);
 
-
+            //    client.Send(msg);
+            //    client.Dispose();
+            //    res = msg;
+            //}
 
 
             return Json(res, JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult MailSenderQR()
+        {
+            string fecha = DateTime.Now.ToString("dddd MM yyyy");
+            IAccount a = new IAccount();
+            List<Tb_RegistroInvitados> u = a.ListRegistroInvitados();
+            int i = 0;
+            var res = new MailMessage();
+            string mailemisor2 = "fbx40tulum@gmail.com";
+            string mailreceptor2 = "";
+            string mailoculto2 = "";//"asantos@strategias.mx, omartinez@cecgroup.mx";
+            string contraseña2 = "fabricio21";
+            foreach (var item in u)
+            {                
+                string cadenaQr = u[i].Txt_QR;
+                string imagePath = "~/Images/" + cadenaQr + ".jpg";
+                string rutaQr = Server.MapPath(imagePath);
+                if (System.IO.File.Exists(rutaQr))
+                {
+                    try
+                    {
+                        System.IO.File.Delete(rutaQr);
+                    }
+                    catch (System.IO.IOException e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
+                }
+                var barcodeWriter = new BarcodeWriter
+                {
+                    Format = BarcodeFormat.QR_CODE
+                };
+                var result = barcodeWriter.Write(cadenaQr);
 
+                string barcodePath = Server.MapPath(imagePath);
+                var barcodeBitmap = new Bitmap(result);
+                using (MemoryStream memory = new MemoryStream())
+                {
+                    using (FileStream fs = new FileStream(barcodePath, FileMode.Create, FileAccess.ReadWrite))
+                    {
+                        int x, y;
+                        for (x = 0; x < barcodeBitmap.Width; x++)
+                        {
+                            for (y = 0; y < barcodeBitmap.Height; y++)
+                            {
+                                Color pixelColor = barcodeBitmap.GetPixel(x, y);
+                                Color newColor = Color.FromArgb(pixelColor.B, x, y);
+                                barcodeBitmap.SetPixel(x, y, newColor);
+                            }
+                        }
+                        barcodeBitmap.Save(memory, ImageFormat.Jpeg);
+                        byte[] bytes = memory.ToArray();
+                        fs.Write(bytes, 0, bytes.Length);
+                        string rutfin = imagePath + " " + barcodeBitmap;
+                    }
+                }
+
+                string text = "";
+            AlternateView plainView = AlternateView.CreateAlternateViewFromString(text, Encoding.UTF8, MediaTypeNames.Text.Plain);
+            string platilla = "<!DOCTYPE html>" +
+                "<html lang = 'en'>" +
+                "<head><meta charset = 'UTF-8' ></head >" +
+                "<style>" +
+                ".bodycont{width: 64rem;max-height: fit-content;" +
+                "height:52rem;align-items: flex-end; display: flex;}" +
+                ".image{position: absolute;height: 15rem;width: 15rem;margin - bottom: 1rem;top: 18rem;left: 13rem;z-index: 1;}" +
+                 ".image2{position:absolute;height:35rem; width:40rem;z-index:-1;}" +
+                "</style>"+
+                "<body style='text-align: center; '>" +
+                  "<DIV STYLE = 'position:absolute; top:36px; left:240px; visibility:visible z-index:-1' >" +
+                   "<IMG SRC='cid:imagenFondo' height='250px' width='600px'></div>" +
+                    "<DIV STYLE ='text-align:center;position:absolute; top:287px; left:462px; visibility:visible z-index:1'>" +
+                   "<IMG height='160px' width='160px' SRC='cid:imagen'></div>" +
+                   "</body></html>";
+            AlternateView htmlView = AlternateView.CreateAlternateViewFromString(platilla, Encoding.UTF8, MediaTypeNames.Text.Html);
+            string imagePath2 = "~\\Images\\emialQR2.png";
+            string rutafondo = Server.MapPath(imagePath2);
+            LinkedResource img2 = new LinkedResource(rutafondo, MediaTypeNames.Image.Jpeg);
+            img2.ContentId = "imagenFondo";
+            htmlView.LinkedResources.Add(img2);
+             // para obtener el qr
+             string imageQr = "~\\Images\\" + cadenaQr + ".jpg";
+             string qrcodePath = Server.MapPath(imageQr);
+             LinkedResource img = new LinkedResource(qrcodePath, MediaTypeNames.Image.Jpeg);
+             img.ContentId = "imagen";
+             htmlView.LinkedResources.Add(img);
+                
+                //cambiar el seteo para enviar todo las variables
+                mailreceptor2 = "jcenteno@cecgroup.mx";// u[i].Txt_Correo;//
+
+                MailMessage msg = new MailMessage(mailemisor2, mailreceptor2, "Evento FBX40" + fecha + " ", "");
+            // msg.Bcc.Add(mailoculto2);
+            msg.IsBodyHtml = true;
+            msg.AlternateViews.Add(htmlView);
+            SmtpClient client = new SmtpClient("smtp.gmail.com");
+            client.EnableSsl = true;
+            client.UseDefaultCredentials = false;
+            client.Port = 587;
+            client.Credentials = new System.Net.NetworkCredential(mailemisor2, contraseña2);
+            client.Send(msg);
+                if (System.IO.File.Exists(qrcodePath))
+                {
+                    try
+                    {
+                        System.IO.File.Delete(rutaQr);
+                    }
+                    catch (System.IO.IOException e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
+                }
+                client.Dispose();
+            res = msg;
+               
+            }
+
+
+            return Json(res, JsonRequestBehavior.AllowGet);
+        }
 
     }
 

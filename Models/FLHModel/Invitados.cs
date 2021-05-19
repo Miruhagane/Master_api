@@ -57,4 +57,14 @@ namespace Queue.Models.FLDModel
         public int Bol_Validado { get; set; }
         
     }
+    public class ListRegistroInvitados {
+        public string  Txt_Correo { get; set; }
+        public string Txt_QR { get; set; }
+    }
+
+    public class ListRegistroAcompanante
+    {
+        public string Txt_Correo { get; set; }
+        public string Txt_QR { get; set; }
+    }
 }
