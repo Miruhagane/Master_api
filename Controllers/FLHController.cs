@@ -41,7 +41,117 @@ namespace Queue.Controllers
 
             return false;
         }
-       
+
+
+        public JsonResult asistencia(string QR)
+        {
+                
+            try
+            {
+                var datoPersona = db.Tb_RegistroInvitados.FirstOrDefault(x => x.Txt_QR == QR);
+                if (datoPersona != null)
+                {
+                    var invitado = db.Tb_EventosInvitado.FirstOrDefault(x => x.Int_IdInvitado == datoPersona.Int_IdRegistro);
+                    var evento = db.Ct_Eventos.ToList();
+                    lstEvento lst = new lstEvento();
+
+                    int i = 1;
+                    foreach ( var item in evento)
+                    {
+                        if (invitado.Bol_Evento1 == true)
+                        {
+                            lst.evento3 = item.Txt_Evento;
+                        }
+                        i++;
+                    }
+
+                    lst.nombre = datoPersona.Txt_Nombre;
+                    lst.evento2 = "";
+
+                    return Json(lst, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return Json("", JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult buscarqr(string QR)
+        {
+            try
+            {
+               var datoInvitado = db.Tb_RegistroInvitados.FirstOrDefault(x => x.Txt_QR == QR);
+                IAccount ac = new IAccount();
+                lstEvento ReponseEvento = new lstEvento();
+                if (datoInvitado != null)
+                {
+                    var diaInvitado = db.Tb_EventosInvitado.FirstOrDefault(x => x.Int_IdInvitado == datoInvitado.Int_IdRegistro);
+                    //primer evento
+                    if (diaInvitado.Bol_Evento1 == true)
+                    {
+                        Tb_EventosInvitado eventosInvitado = new Tb_EventosInvitado
+                        {
+                            Int_IdRegistro = diaInvitado.Int_IdRegistro,
+                            Int_IdInvitado = diaInvitado.Int_IdInvitado,
+                            Bol_Evento1 = false,
+                            Bol_Evento2 = diaInvitado.Bol_Evento2,
+                            Bol_Evento3= diaInvitado.Bol_Evento3,
+                        };
+                        // método para enviar información actualización 
+                        var result = ac.EventosInvitado(eventosInvitado);
+                            
+                        return Json(result, JsonRequestBehavior.AllowGet);
+                    }
+                    //segundo dia del evento
+                    if (diaInvitado.Bol_Evento2 == true)
+                    {
+                        Tb_EventosInvitado eventosInvitado = new Tb_EventosInvitado
+                        {
+                            Int_IdRegistro = diaInvitado.Int_IdRegistro,
+                            Int_IdInvitado = diaInvitado.Int_IdInvitado,
+                            Bol_Evento1 = diaInvitado.Bol_Evento1,
+                            Bol_Evento2 = false,
+                            Bol_Evento3 = diaInvitado.Bol_Evento3,
+                        };
+                        // método para enviar información actualización
+                        var result = ac.EventosInvitado(eventosInvitado);
+
+                        return Json(result, JsonRequestBehavior.AllowGet);
+                    }
+                    // tercer dia del evento 
+                    if (diaInvitado.Bol_Evento3 == true)
+                    {
+                        Tb_EventosInvitado eventosInvitado = new Tb_EventosInvitado
+                        {
+                            Int_IdRegistro = diaInvitado.Int_IdRegistro,
+                            Int_IdInvitado = diaInvitado.Int_IdInvitado,
+                            Bol_Evento1 =diaInvitado.Bol_Evento1,
+                            Bol_Evento2 = diaInvitado.Bol_Evento2,
+                            Bol_Evento3 = false,
+                        };
+                        // método para enviar información actualización 
+                        var result = ac.EventosInvitado(eventosInvitado);
+
+                        return Json(result, JsonRequestBehavior.AllowGet);
+                    }
+
+
+                }
+
+                
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
+            return Json("", JsonRequestBehavior.AllowGet);
+
+        }
         public JsonResult searchqr(string QR)
         {
 

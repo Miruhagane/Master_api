@@ -344,6 +344,7 @@
     </Compile>
     <Compile Include="Models\QRCode.cs" />
     <Compile Include="Models\ViewModel\lstEvento.cs" />
+    <Compile Include="Models\ViewModel\ReponseEvento.cs" />
     <Compile Include="Models\ViewModel\UserViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

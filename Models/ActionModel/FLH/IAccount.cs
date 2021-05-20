@@ -257,5 +257,32 @@ namespace Queue.Models.ActionModel.FLH
             return lista;
         }
 
+        public Tb_EventosInvitado EventosInvitado(Tb_EventosInvitado eventosInvitado)
+        {
+            Tb_EventosInvitado tb_Eventos = new Tb_EventosInvitado();
+            using (SqlConnection sql = new SqlConnection(con))
+            {
+                try
+                {                   
+                    sql.Open();
+                    string query = "Update Tb_EventosInvitado set Bol_Evento1 = "+Convert.ToInt32(eventosInvitado.Bol_Evento1) +", " +
+                        "Bol_Evento2 = "+ Convert.ToInt32(eventosInvitado.Bol_Evento2) +", " +
+                        "Bol_Evento3 = " + Convert.ToInt32(eventosInvitado.Bol_Evento3) + " " +
+                        " where Int_IdInvitado ="+ Convert.ToInt32(eventosInvitado.Int_IdInvitado)+"";
+                    SqlCommand cmd = new SqlCommand(query, sql);
+                    cmd.ExecuteNonQuery();
+                   
+                }
+                catch (Exception ex)
+                {
+
+                    throw new Exception(ex.Message);
+                }
+                tb_Eventos = db.Tb_EventosInvitado.FirstOrDefault(x => x.Int_IdInvitado == eventosInvitado.Int_IdInvitado);
+            }
+
+            return tb_Eventos;
+        }
+
     }
 }
