@@ -19,6 +19,7 @@ using System.IO;
 using ZXing;
 using System.Drawing;
 using System.Drawing.Imaging;
+using ZXing.Common;
 
 namespace Queue.Controllers
 {
@@ -40,8 +41,7 @@ namespace Queue.Controllers
 
             return false;
         }
-
-
+       
         public JsonResult searchqr(string QR)
         {
 
@@ -426,11 +426,12 @@ namespace Queue.Controllers
             var res = new MailMessage();
             string mailemisor2 = "fbx40tulum@gmail.com";
             string mailreceptor2 = "";
-            string mailoculto2 = "";//"asantos@strategias.mx, omartinez@cecgroup.mx";
+            string mailoculto2 = "asantos@strategias.mx, omartinez@cecgroup.mx,jcenteno@cecgropu.mx";
             string contraseña2 = "fabricio21";
+            string qrcodePath = "";
             foreach (var item in u)
             {                
-                string cadenaQr = u[i].Txt_QR;
+                string cadenaQr = item.Txt_QR;
                 string imagePath = "~/Images/" + cadenaQr + ".jpg";
                 string rutaQr = Server.MapPath(imagePath);
                 if (System.IO.File.Exists(rutaQr))
@@ -444,28 +445,24 @@ namespace Queue.Controllers
                         Console.WriteLine(e.Message);
                     }
                 }
+                // parte para convertir la cadena string a qr
                 var barcodeWriter = new BarcodeWriter
                 {
-                    Format = BarcodeFormat.QR_CODE
+                    Format = BarcodeFormat.QR_CODE,
+                    Options = new EncodingOptions
+                    {
+                        Height = 300,
+                        Width = 300
+                    }
                 };
                 var result = barcodeWriter.Write(cadenaQr);
-
                 string barcodePath = Server.MapPath(imagePath);
                 var barcodeBitmap = new Bitmap(result);
+
                 using (MemoryStream memory = new MemoryStream())
                 {
                     using (FileStream fs = new FileStream(barcodePath, FileMode.Create, FileAccess.ReadWrite))
                     {
-                        int x, y;
-                        for (x = 0; x < barcodeBitmap.Width; x++)
-                        {
-                            for (y = 0; y < barcodeBitmap.Height; y++)
-                            {
-                                Color pixelColor = barcodeBitmap.GetPixel(x, y);
-                                Color newColor = Color.FromArgb(pixelColor.B, x, y);
-                                barcodeBitmap.SetPixel(x, y, newColor);
-                            }
-                        }
                         barcodeBitmap.Save(memory, ImageFormat.Jpeg);
                         byte[] bytes = memory.ToArray();
                         fs.Write(bytes, 0, bytes.Length);
@@ -473,7 +470,7 @@ namespace Queue.Controllers
                     }
                 }
 
-                string text = "";
+            string text = "";
             AlternateView plainView = AlternateView.CreateAlternateViewFromString(text, Encoding.UTF8, MediaTypeNames.Text.Plain);
             string platilla = "<!DOCTYPE html>" +
                 "<html lang = 'en'>" +
@@ -485,11 +482,11 @@ namespace Queue.Controllers
                  ".image2{position:absolute;height:35rem; width:40rem;z-index:-1;}" +
                 "</style>"+
                 "<body style='text-align: center; '>" +
-                  "<DIV STYLE = 'position:absolute; top:36px; left:240px; visibility:visible z-index:-1' >" +
-                   "<IMG SRC='cid:imagenFondo' height='250px' width='600px'></div>" +
-                    "<DIV STYLE ='text-align:center;position:absolute; top:287px; left:462px; visibility:visible z-index:1'>" +
-                   "<IMG height='160px' width='160px' SRC='cid:imagen'></div>" +
-                   "</body></html>";
+                "<DIV STYLE = 'position:absolute; top:36px; left:240px; visibility:visible z-index:-1' >" +
+                "<IMG SRC='cid:imagenFondo' height='250px' width='600px'></div>" +
+                "<DIV STYLE ='text-align:center;position:absolute; top:287px; left:462px; visibility:visible z-index:1'>" +
+                "<IMG height='160px' width='160px' SRC='cid:imagen'></div>" +
+                "</body></html>";
             AlternateView htmlView = AlternateView.CreateAlternateViewFromString(platilla, Encoding.UTF8, MediaTypeNames.Text.Html);
             string imagePath2 = "~\\Images\\emialQR2.png";
             string rutafondo = Server.MapPath(imagePath2);
@@ -498,41 +495,41 @@ namespace Queue.Controllers
             htmlView.LinkedResources.Add(img2);
              // para obtener el qr
              string imageQr = "~\\Images\\" + cadenaQr + ".jpg";
-             string qrcodePath = Server.MapPath(imageQr);
+             qrcodePath = Server.MapPath(imageQr);
              LinkedResource img = new LinkedResource(qrcodePath, MediaTypeNames.Image.Jpeg);
              img.ContentId = "imagen";
              htmlView.LinkedResources.Add(img);
                 
                 //cambiar el seteo para enviar todo las variables
-                mailreceptor2 = "jcenteno@cecgroup.mx";// u[i].Txt_Correo;//
+                mailreceptor2 = item.Txt_QR;
 
                 MailMessage msg = new MailMessage(mailemisor2, mailreceptor2, "Evento FBX40" + fecha + " ", "");
-            // msg.Bcc.Add(mailoculto2);
-            msg.IsBodyHtml = true;
-            msg.AlternateViews.Add(htmlView);
-            SmtpClient client = new SmtpClient("smtp.gmail.com");
-            client.EnableSsl = true;
-            client.UseDefaultCredentials = false;
-            client.Port = 587;
-            client.Credentials = new System.Net.NetworkCredential(mailemisor2, contraseña2);
-            client.Send(msg);
-                if (System.IO.File.Exists(qrcodePath))
-                {
-                    try
-                    {
-                        System.IO.File.Delete(rutaQr);
-                    }
-                    catch (System.IO.IOException e)
-                    {
-                        Console.WriteLine(e.Message);
-                    }
-                }
+                msg.Bcc.Add(mailoculto2);
+                msg.IsBodyHtml = true;
+                msg.AlternateViews.Add(htmlView);
+                SmtpClient client = new SmtpClient("smtp.gmail.com");
+                client.EnableSsl = true;
+                client.UseDefaultCredentials = false;
+                client.Port = 587;
+                client.Credentials = new System.Net.NetworkCredential(mailemisor2, contraseña2);
+                client.Send(msg);               
                 client.Dispose();
-            res = msg;
+                res = msg;
                
+        
+            //if (System.IO.File.Exists(qrcodePath))
+            //{
+            //    try
+            //    {
+            //        System.IO.File.Delete(qrcodePath);
+            //        qrcodePath = "";
+            //    }
+            //    catch (System.IO.IOException e)
+            //    {
+            //        Console.WriteLine(e.Message);
+            //    }
+            //}
             }
-
-
             return Json(res, JsonRequestBehavior.AllowGet);
         }
 
