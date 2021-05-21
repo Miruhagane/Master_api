@@ -387,7 +387,10 @@ namespace Queue.Controllers
 
             return res;
         }
-
+        /// <summary>
+        /// método para enviar correo a invitados 
+        /// </summary>
+        /// <returns></returns>
         public JsonResult mail()
         {
 
