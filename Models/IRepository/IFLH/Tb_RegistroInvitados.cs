@@ -23,5 +23,8 @@ namespace Queue.Models.IRepository.IFLH
         public string Txt_Token { get; set; }
         public string Txt_QR { get; set; }
         public Nullable<int> Int_Status { get; set; }
+        public string Txt_Motivo { get; set; }
+        public string Txt_NombreAcompañante { get; set; }
+        public string Txt_CorreoAcompañante { get; set; }
     }
 }

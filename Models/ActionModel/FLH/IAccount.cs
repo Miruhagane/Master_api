@@ -20,7 +20,7 @@ namespace Queue.Models.ActionModel.FLH
         {
             string result = "2";
             var user = db.Tb_RegistroInvitados.FirstOrDefault(x => x.Txt_Correo == mail && x.Txt_Contraseña == password);
-            if(user != null)
+            if (user != null)
             {
                 result = user.Txt_Token;
                 return result;
@@ -92,7 +92,7 @@ namespace Queue.Models.ActionModel.FLH
                             SqlCommand cmt = new SqlCommand(add, sql);
                             cmt.ExecuteNonQuery();
 
-                            string eventacomp = "insert into Tb_EventosAcompañante ( Int_IdAcompañante, Bol_Evento1, Bol_Evento2, Bol_Evento3, Fec_Alta, Bol_Validado) values( "+ acom.Int_IdRegistro + ", "+evento1+" , "+evento2+" , "+evento3+" , GETDATE(), 1) ";
+                            string eventacomp = "insert into Tb_EventosAcompañante ( Int_IdAcompañante, Bol_Evento1, Bol_Evento2, Bol_Evento3, Fec_Alta, Bol_Validado) values( " + acom.Int_IdRegistro + ", " + evento1 + " , " + evento2 + " , " + evento3 + " , GETDATE(), 1) ";
                             SqlCommand acomp = new SqlCommand(eventacomp, sql);
                             acomp.ExecuteNonQuery();
                             sql.Close();
@@ -113,21 +113,21 @@ namespace Queue.Models.ActionModel.FLH
 
             }
             else {
-                return s;   
+                return s;
             }
-           
+
         }
 
 
         public bool Update(string qr)
         {
             var inv = db.Tb_RegistroInvitados.FirstOrDefault(x => x.Txt_QR == qr);
-            if(inv == null)
-            {   
-               var acom = db.Tb_RegistroAcompañantes.FirstOrDefault(x => x.Txt_QR == qr); 
-                if(acom != null)
+            if (inv == null)
+            {
+                var acom = db.Tb_RegistroAcompañantes.FirstOrDefault(x => x.Txt_QR == qr);
+                if (acom != null)
                 {
-                    using(SqlConnection sql = new SqlConnection(con))
+                    using (SqlConnection sql = new SqlConnection(con))
                     {
                         string query = "update ";
                         sql.Open();
@@ -141,7 +141,7 @@ namespace Queue.Models.ActionModel.FLH
 
 
         public IEnumerable<InvitadosEvento> Exists(string token)
-        { 
+        {
             List<InvitadosEvento> list = new List<InvitadosEvento>();
             try
             {
@@ -180,11 +180,11 @@ namespace Queue.Models.ActionModel.FLH
         {
             List<ListaInvitados> list = new List<ListaInvitados>();
 
-            using(SqlConnection sql = new SqlConnection(con))
+            using (SqlConnection sql = new SqlConnection(con))
             {
                 sql.Open();
                 string query = "select Txt_Correo from Tb_ListadoInvitados";
-               
+
                 SqlDataAdapter da = new SqlDataAdapter(query, sql);
                 DataSet a = new DataSet();
                 da.Fill(a);
@@ -263,15 +263,15 @@ namespace Queue.Models.ActionModel.FLH
             using (SqlConnection sql = new SqlConnection(con))
             {
                 try
-                {                   
+                {
                     sql.Open();
-                    string query = "Update Tb_EventosInvitado set Bol_Evento1 = "+Convert.ToInt32(eventosInvitado.Bol_Evento1) +", " +
-                        "Bol_Evento2 = "+ Convert.ToInt32(eventosInvitado.Bol_Evento2) +", " +
+                    string query = "Update Tb_EventosInvitado set Bol_Evento1 = " + Convert.ToInt32(eventosInvitado.Bol_Evento1) + ", " +
+                        "Bol_Evento2 = " + Convert.ToInt32(eventosInvitado.Bol_Evento2) + ", " +
                         "Bol_Evento3 = " + Convert.ToInt32(eventosInvitado.Bol_Evento3) + " " +
-                        " where Int_IdInvitado ="+ Convert.ToInt32(eventosInvitado.Int_IdInvitado)+"";
+                        " where Int_IdInvitado =" + Convert.ToInt32(eventosInvitado.Int_IdInvitado) + "";
                     SqlCommand cmd = new SqlCommand(query, sql);
                     cmd.ExecuteNonQuery();
-                   
+                    sql.Close();
                 }
                 catch (Exception ex)
                 {
@@ -282,6 +282,31 @@ namespace Queue.Models.ActionModel.FLH
             }
 
             return tb_Eventos;
+        }
+
+        public string actualizarInvitado(int numEnviado, int idInvitado, string Correo )
+        {
+            using (SqlConnection sql = new SqlConnection(con))
+            {
+                try
+                {
+                    sql.Open();
+                    string query = "Update Tb_ListadoInvitados set Num_Enviado = " + numEnviado + " "+
+                        "where Int_IdInvitado =" + Convert.ToInt32(idInvitado) +"";
+
+                   
+                    SqlCommand cmd = new SqlCommand(query, sql);
+                    cmd.ExecuteNonQuery();
+
+                }
+                catch (Exception ex)
+                {
+
+                    throw new Exception(ex.Message);
+                }
+            }
+
+            return "actualizado";
         }
 
     }

@@ -1,4 +1,4 @@
-﻿// La generación de código T4 está habilitada para el modelo 'C:\Users\ricar\Desktop\Backup Carlos Mario\Backup\Queue\Queue\Queue\Models\IRepository\IFLH\FLH.edmx'. 
+﻿// La generación de código T4 está habilitada para el modelo 'C:\Users\ANALISTA SISTEMAS\Source\Repos\Master_api\Models\IRepository\IFLH\FLH.edmx'. 
 // Para habilitar la generación de código heredada, cambie el valor de la propiedad del diseñador 'Estrategia de generación de código'
 // por 'ObjectContext heredado'. Esta propiedad está disponible en la ventana Propiedades cuando se abre
 // el modelo en el diseñador.
