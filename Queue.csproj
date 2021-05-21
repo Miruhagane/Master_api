@@ -343,6 +343,7 @@
       <DependentUpon>FLH.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\QRCode.cs" />
+    <Compile Include="Models\ViewModel\EventoInfo.cs" />
     <Compile Include="Models\ViewModel\lstEvento.cs" />
     <Compile Include="Models\ViewModel\ReponseEvento.cs" />
     <Compile Include="Models\ViewModel\UserViewModel.cs" />

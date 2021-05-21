@@ -42,7 +42,11 @@ namespace Queue.Controllers
             return false;
         }
 
-
+        /// <summary>
+        /// metodo que muestra información de invitado o acompañante registrado
+        /// </summary>
+        /// <param name="QR"></param>
+        /// <returns></returns>
         public JsonResult asistencia(string QR)
         {
                 
@@ -53,12 +57,20 @@ namespace Queue.Controllers
                 {
                     var invitado = db.Tb_EventosInvitado.FirstOrDefault(x => x.Int_IdInvitado == datoPersona.Int_IdRegistro);
                     var evento = db.Ct_Eventos.ToList();
-                    lstEvento lst = new lstEvento();
+                    EventoInfo lst = new EventoInfo();
 
                     int i = 1;
                     foreach ( var item in evento)
                     {
-                        if (invitado.Bol_Evento1 == true)
+                        if (invitado.Bol_Evento1 == true && i==1)
+                        {
+                            lst.evento1 = item.Txt_Evento;
+                        }
+                        if (invitado.Bol_Evento2 == true && i == 2)
+                        {
+                            lst.evento2 = item.Txt_Evento;
+                        }
+                        if (invitado.Bol_Evento3 == true && i == 3)
                         {
                             lst.evento3 = item.Txt_Evento;
                         }
@@ -66,15 +78,46 @@ namespace Queue.Controllers
                     }
 
                     lst.nombre = datoPersona.Txt_Nombre;
-                    lst.evento2 = "";
+                    lst.msn = "Por favor validar su entrada.";
+
+                    return Json(lst, JsonRequestBehavior.AllowGet);
+                }
+                var datoAcompanante = db.Tb_RegistroAcompañantes.FirstOrDefault(x => x.Txt_QR == QR);
+                if (datoAcompanante != null)
+                {
+                    var invitado = db.Tb_EventosAcompañante.FirstOrDefault(x => x.Int_IdAcompañante == datoAcompanante.Int_IdRegistro);
+                    var evento = db.Ct_Eventos.ToList();
+                    EventoInfo lst = new EventoInfo();
+
+                    int i = 1;
+                    foreach (var item in evento)
+                    {
+                        if (invitado.Bol_Evento1 == true && i == 1)
+                        {
+                            lst.evento1 = item.Txt_Evento;
+                        }
+                        if (invitado.Bol_Evento2 == true && i == 2)
+                        {
+                            lst.evento2 = item.Txt_Evento;
+                        }
+                        if (invitado.Bol_Evento3 == true && i == 3)
+                        {
+                            lst.evento3 = item.Txt_Evento;
+                        }
+                        i++;
+                    }
+
+                    lst.nombre = datoAcompanante.Txt_Nombre;
+                    lst.msn = "Por favor validar su entrada.";
 
                     return Json(lst, JsonRequestBehavior.AllowGet);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 throw;
+               
             }
             return Json("", JsonRequestBehavior.AllowGet);
         }
