@@ -20,5 +20,8 @@ namespace Queue.Models.IRepository.IFLH
         public Nullable<int> Int_Status { get; set; }
         public Nullable<int> Num_Enviado { get; set; }
         public Nullable<System.DateTime> Fec_Enviado { get; set; }
+        public string Txt_Password { get; set; }
+        public string Txt_Telefono { get; set; }
+        public Nullable<bool> Bol_Vip { get; set; }
     }
 }

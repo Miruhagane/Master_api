@@ -13,6 +13,7 @@ using System.Net.Mail;
 using System.Data.SqlClient;
 using System.Data;
 using HttpGetAttribute = System.Web.Http.HttpGetAttribute;
+using System.Security.Cryptography;
 
 namespace Queue.Controllers
 {
@@ -196,37 +197,252 @@ namespace Queue.Controllers
             }
             return false;
         }
-    
-        [HttpGet]
-        public string Login(  string email, string password)
+
+        public JsonResult registro(string mail, string nombre, long number, bool e1, bool e2, bool e3, string nameacompañante, string emailacompañante, long telacompañante)
         {
-            IAccount a = new IAccount();
-            string res = "2";        
-            try
-            {
-                var confirmation = a.Login(email, password);
-                if(confirmation != null)
+            int a = 1;
+
+            string qr = "";
+            string s = "2";
+
+           
+                int evento1 = 0;
+                int evento2 = 0;
+                int evento3 = 0;
+
+                if (e1 == true)
                 {
-                    res = confirmation;
-                    return res;
+                    evento1 = 1;
                 }
+
+                if (e2 == true)
+                {
+                    evento2 = 1;
+                }
+
+                if (e3 == true)
+                {
+                    evento3 = 1;
+                }
+
+                int length = 30;
+                const string valid = "ABCDEFOPTUVWXYZ1234567890";
+
+                using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider())
+                {
+                    while (qr.Length != length)
+                    {
+                        byte[] oneByte = new byte[1];
+                        rng.GetBytes(oneByte);
+                        char character = (char)oneByte[0];
+                        if (valid.Contains(character))
+                        {
+                            qr += character;
+                        }
+                    }
+                }
+
+
+                SqlDataAdapter da = new SqlDataAdapter("update Tb_RegistroInvitados set Txt_QR = '"+qr+"' where Txt_Correo = '"+ mail + "'", con);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+
+            return Json(a, JsonRequestBehavior.AllowGet);
+        }
+    
+       
+        public JsonResult Login(string email, string password)
+        {
+
+            int a = 2;
+            List<cookiesuser> list = new List<cookiesuser>();
+            var userexist = db.Tb_ListadoInvitados.FirstOrDefault(x => x.Txt_Correo == email);
+
+            if (userexist != null)
+            {
+             
+
+                if ( userexist.Int_Status == 0)
+                {
+                    SqlDataAdapter da = new SqlDataAdapter("update Tb_ListadoInvitados set Int_Status = 1, Txt_Password = '"+password+"' where Int_IdInvitado = "+userexist.Int_IdInvitado+"", con);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+
+                    SqlDataAdapter insert = new SqlDataAdapter("insert into Tb_RegistroInvitados ( Txt_Correo, Txt_Nombre, Fec_Alta, Int_Status) values ( '"+email+"' , '"+userexist.Txt_Nombre+"',  GETDATE(), 1)", con);
+                    DataTable dta = new DataTable();
+                    insert.Fill(dta);
+
+
+                    var userreg = db.Tb_RegistroInvitados.FirstOrDefault(x => x.Txt_Correo == email);
+
+                   
+
+                    cookiesuser ia = new cookiesuser()
+                    {
+                      userid = userreg.Int_IdRegistro,
+                      nombre = userreg.Txt_Nombre,
+                      status = 2,
+                      email = userexist.Txt_Correo
+                    };
+
+                    list.Add(ia);
+
+                    return Json(list, JsonRequestBehavior.AllowGet);
+
+                   
+                }
+                else if( userexist.Int_Status == 1)
+                {
+                    if (userexist.Txt_Password == password)
+                    {
+                        var userreg = db.Tb_RegistroInvitados.FirstOrDefault(x => x.Txt_Correo == email);
+
+                        cookiesuser ia = new cookiesuser()
+                        {
+                            userid = userreg.Int_IdRegistro,
+                            nombre = userreg.Txt_Nombre,
+                            status = 2,
+                            email = userexist.Txt_Correo
+                        };
+
+                        list.Add(ia);
+
+                        return Json(list, JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        var userreg = db.Tb_RegistroInvitados.FirstOrDefault(x => x.Txt_Correo == email);
+                        cookiesuser ia = new cookiesuser()
+                        {
+                            userid = 0,
+                            nombre = " ",
+                            status = 3,
+                            email = ""
+                            
+                        };
+
+                        list.Add(ia);
+
+                        return Json(list, JsonRequestBehavior.AllowGet);
+                    }
+                }
+
+              
+                cookiesuser ib = new cookiesuser()
+                {
+                    userid = 0,
+                    nombre = " ",
+                    status = 1,
+                    email = ""
+                };
+
+                list.Add(ib);
+
+                return Json(list, JsonRequestBehavior.AllowGet);
+
             }
-            catch (Exception er)
-            { 
+            else {
+
+                cookiesuser ib = new cookiesuser()
+                {
+                    userid = 0,
+                    nombre = " ",
+                    status = 1,
+                    email = ""
+                };
+
+                list.Add(ib);
+
+                return Json(list, JsonRequestBehavior.AllowGet);
             }
-            return res;
         }
 
 
-    
-        public string Insert(string token, string email, long number, string name, bool e1, bool e2, bool e3)
+        public string qrgenerador()
         {
-            IAccount a = new IAccount();
-            string res = "";
+            string qr = "";
+            int length = 30;
+            const string valid = "ABCDEFOPTUVWXYZ1234567890";
 
-                res = a.Insert(token, email, number, name, e1, e2, e3).ToString();
+            using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider())
+            {
+                while (qr.Length != length)
+                {
+                    byte[] oneByte = new byte[1];
+                    rng.GetBytes(oneByte);
+                    char character = (char)oneByte[0];
+                    if (valid.Contains(character))
+                    {
+                        qr += character;
+                    }
+                }
+            }
 
-            return res;
+            return qr;
+        }
+
+    
+        public JsonResult Insert(string userid , long number, bool e1, bool e2, bool e3, string nombreacompañante, string emailacompañante, string motivo)
+        {
+
+            try
+            {
+                int evento1 = 0;
+                int evento2 = 0;
+                int evento3 = 0;
+
+                if (e1 == true)
+                {
+                    evento1 = 1;
+                }
+
+                if (e2 == true)
+                {
+                    evento2 = 1;
+                }
+
+                if (e3 == true)
+                {
+                    evento3 = 1;
+                }
+
+                SqlDataAdapter insertinvi = new SqlDataAdapter("update Tb_RegistroInvitados set Num_Telefono = '" + number + "', Txt_QR = '" + qrgenerador() + "' , Txt_Motivo = '" + motivo + "', Txt_NombreAcompañante = '" + nombreacompañante + "', Txt_CorreoAcompañante = '" + emailacompañante + "' where Int_IdRegistro = " + userid + "", con);
+                DataTable di = new DataTable();
+                insertinvi.Fill(di);
+
+                SqlDataAdapter insertacom = new SqlDataAdapter("insert into Tb_RegistroAcompañantes ( Txt_Correo, Txt_Nombre, Fec_Alta, Txt_QR, Int_Status) values ( '" + emailacompañante + "', '" + nombreacompañante + "', GETDATE(), '" + qrgenerador() + "', 1)", con);
+                DataTable da = new DataTable();
+                insertacom.Fill(da);
+
+              
+                    SqlDataAdapter inserteventoinv = new SqlDataAdapter("insert into Tb_EventosInvitado (Int_IdInvitado, Bol_Evento1, Bol_Evento2, Bol_Evento3, Fec_Alta, Bol_Validado) values( " + userid + ", " + evento1 + ", " + evento2 + ", " + evento3 + ", GETDATE(), 0)", con);
+                    DataTable ei = new DataTable();
+                    inserteventoinv.Fill(ei);
+
+                if (emailacompañante != null)
+                {
+                    var useracomp = db.Tb_RegistroAcompañantes.FirstOrDefault(x => x.Txt_Correo == emailacompañante);
+
+
+                    SqlDataAdapter inserteventoacomp = new SqlDataAdapter("insert into Tb_EventosAcompañante (Int_IdAcompañante, Bol_Evento1, Bol_Evento2, Bol_Evento3, Fec_Alta, Bol_Validado) values( " + useracomp.Int_IdRegistro + ", " + evento1 + ", " + evento2 + ", " + evento3 + ", GETDATE(), 0)", con);
+                    DataTable ea = new DataTable();
+                    inserteventoacomp.Fill(ea);
+
+                }
+
+                return Json(1, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception err)
+            {
+                return Json(2, JsonRequestBehavior.AllowGet);
+            }
+          
+          
+
+
+
         }
 
         public JsonResult mail() 

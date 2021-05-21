@@ -55,6 +55,9 @@
           <Property Name="Int_Status" Type="int" />
           <Property Name="Num_Enviado" Type="int" />
           <Property Name="Fec_Enviado" Type="datetime" />
+          <Property Name="Txt_Password" Type="varchar" MaxLength="10" />
+          <Property Name="Txt_Telefono" Type="varchar" MaxLength="10" />
+          <Property Name="Bol_Vip" Type="bit" />
         </EntityType>
         <EntityType Name="Tb_RegistroAcompañantes">
           <Key>
@@ -81,6 +84,9 @@
           <Property Name="Txt_Token" Type="nvarchar" MaxLength="20" />
           <Property Name="Txt_QR" Type="nvarchar" MaxLength="30" />
           <Property Name="Int_Status" Type="int" />
+          <Property Name="Txt_Motivo" Type="varchar(max)" />
+          <Property Name="Txt_NombreAcompañante" Type="varchar(max)" />
+          <Property Name="Txt_CorreoAcompañante" Type="varchar(max)" />
         </EntityType>
         <EntityContainer Name="FLHModelStoreContainer">
           <EntitySet Name="Ct_Eventos" EntityType="Self.Ct_Eventos" Schema="dbo" store:Type="Tables" />
@@ -127,17 +133,6 @@
           <Property Name="Fec_Alta" Type="DateTime" Precision="3" />
           <Property Name="Bol_Validado" Type="Int32" />
         </EntityType>
-        <EntityType Name="Tb_ListadoInvitados">
-          <Key>
-            <PropertyRef Name="Int_IdInvitado" />
-          </Key>
-          <Property Name="Int_IdInvitado" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Txt_Correo" Type="String" MaxLength="70" FixedLength="false" Unicode="true" />
-          <Property Name="Txt_Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Int_Status" Type="Int32" />
-          <Property Name="Num_Enviado" Type="Int32" />
-          <Property Name="Fec_Enviado" Type="DateTime" Precision="3" />
-        </EntityType>
         <EntityType Name="Tb_RegistroAcompañantes">
           <Key>
             <PropertyRef Name="Int_IdRegistro" />
@@ -149,6 +144,23 @@
           <Property Name="Fec_Alta" Type="DateTime" Precision="3" />
           <Property Name="Txt_QR" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Name="Int_Status" Type="Int32" />
+        </EntityType>
+        <EntityContainer Name="FLHEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Ct_Eventos" EntityType="Self.Ct_Eventos" />
+          <EntitySet Name="Tb_EventosAcompañante" EntityType="Self.Tb_EventosAcompañante" />
+          <EntitySet Name="Tb_EventosInvitado" EntityType="Self.Tb_EventosInvitado" />
+          <EntitySet Name="Tb_RegistroAcompañantes" EntityType="Self.Tb_RegistroAcompañantes" />
+          <EntitySet Name="Tb_InvitadoAcompañante" EntityType="FLHModel.Tb_InvitadoAcompañante" />
+          <EntitySet Name="Tb_RegistroInvitados" EntityType="FLHModel.Tb_RegistroInvitados" />
+          <EntitySet Name="Tb_ListadoInvitados" EntityType="FLHModel.Tb_ListadoInvitados" />
+        </EntityContainer>
+        <EntityType Name="Tb_InvitadoAcompañante">
+          <Key>
+            <PropertyRef Name="Int_Idregistro" />
+          </Key>
+          <Property Name="Int_Idregistro" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Int_IdInvitado" Type="Int32" Nullable="false" />
+          <Property Name="Int_idAcompañante" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="Tb_RegistroInvitados">
           <Key>
@@ -163,23 +175,23 @@
           <Property Name="Txt_Token" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="Txt_QR" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Name="Int_Status" Type="Int32" />
+          <Property Name="Txt_Motivo" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Txt_NombreAcompañante" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Txt_CorreoAcompañante" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityContainer Name="FLHEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Ct_Eventos" EntityType="Self.Ct_Eventos" />
-          <EntitySet Name="Tb_EventosAcompañante" EntityType="Self.Tb_EventosAcompañante" />
-          <EntitySet Name="Tb_EventosInvitado" EntityType="Self.Tb_EventosInvitado" />
-          <EntitySet Name="Tb_ListadoInvitados" EntityType="Self.Tb_ListadoInvitados" />
-          <EntitySet Name="Tb_RegistroAcompañantes" EntityType="Self.Tb_RegistroAcompañantes" />
-          <EntitySet Name="Tb_RegistroInvitados" EntityType="Self.Tb_RegistroInvitados" />
-          <EntitySet Name="Tb_InvitadoAcompañante" EntityType="FLHModel.Tb_InvitadoAcompañante" />
-        </EntityContainer>
-        <EntityType Name="Tb_InvitadoAcompañante">
+        <EntityType Name="Tb_ListadoInvitados">
           <Key>
-            <PropertyRef Name="Int_Idregistro" />
+            <PropertyRef Name="Int_IdInvitado" />
           </Key>
-          <Property Name="Int_Idregistro" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Int_IdInvitado" Type="Int32" Nullable="false" />
-          <Property Name="Int_idAcompañante" Type="Int32" Nullable="false" />
+          <Property Name="Int_IdInvitado" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Txt_Correo" Type="String" MaxLength="70" FixedLength="false" Unicode="true" />
+          <Property Name="Txt_Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Int_Status" Type="Int32" />
+          <Property Name="Num_Enviado" Type="Int32" />
+          <Property Name="Fec_Enviado" Type="DateTime" Precision="3" />
+          <Property Name="Txt_Password" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Txt_Telefono" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Bol_Vip" Type="Boolean" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -222,18 +234,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Tb_ListadoInvitados">
-            <EntityTypeMapping TypeName="FLHModel.Tb_ListadoInvitados">
-              <MappingFragment StoreEntitySet="Tb_ListadoInvitados">
-                <ScalarProperty Name="Int_IdInvitado" ColumnName="Int_IdInvitado" />
-                <ScalarProperty Name="Txt_Correo" ColumnName="Txt_Correo" />
-                <ScalarProperty Name="Txt_Nombre" ColumnName="Txt_Nombre" />
-                <ScalarProperty Name="Int_Status" ColumnName="Int_Status" />
-                <ScalarProperty Name="Num_Enviado" ColumnName="Num_Enviado" />
-                <ScalarProperty Name="Fec_Enviado" ColumnName="Fec_Enviado" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Tb_RegistroAcompañantes">
             <EntityTypeMapping TypeName="FLHModel.Tb_RegistroAcompañantes">
               <MappingFragment StoreEntitySet="Tb_RegistroAcompañantes">
@@ -247,27 +247,45 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Tb_RegistroInvitados">
-            <EntityTypeMapping TypeName="FLHModel.Tb_RegistroInvitados">
-              <MappingFragment StoreEntitySet="Tb_RegistroInvitados">
-                <ScalarProperty Name="Int_IdRegistro" ColumnName="Int_IdRegistro" />
-                <ScalarProperty Name="Txt_Correo" ColumnName="Txt_Correo" />
-                <ScalarProperty Name="Txt_Nombre" ColumnName="Txt_Nombre" />
-                <ScalarProperty Name="Txt_Contraseña" ColumnName="Txt_Contraseña" />
-                <ScalarProperty Name="Num_Telefono" ColumnName="Num_Telefono" />
-                <ScalarProperty Name="Fec_Alta" ColumnName="Fec_Alta" />
-                <ScalarProperty Name="Txt_Token" ColumnName="Txt_Token" />
-                <ScalarProperty Name="Txt_QR" ColumnName="Txt_QR" />
-                <ScalarProperty Name="Int_Status" ColumnName="Int_Status" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Tb_InvitadoAcompañante">
             <EntityTypeMapping TypeName="FLHModel.Tb_InvitadoAcompañante">
               <MappingFragment StoreEntitySet="Tb_InvitadoAcompañante">
                 <ScalarProperty Name="Int_idAcompañante" ColumnName="Int_idAcompañante" />
                 <ScalarProperty Name="Int_IdInvitado" ColumnName="Int_IdInvitado" />
                 <ScalarProperty Name="Int_Idregistro" ColumnName="Int_Idregistro" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tb_RegistroInvitados">
+            <EntityTypeMapping TypeName="FLHModel.Tb_RegistroInvitados">
+              <MappingFragment StoreEntitySet="Tb_RegistroInvitados">
+                <ScalarProperty Name="Txt_CorreoAcompañante" ColumnName="Txt_CorreoAcompañante" />
+                <ScalarProperty Name="Txt_NombreAcompañante" ColumnName="Txt_NombreAcompañante" />
+                <ScalarProperty Name="Txt_Motivo" ColumnName="Txt_Motivo" />
+                <ScalarProperty Name="Int_Status" ColumnName="Int_Status" />
+                <ScalarProperty Name="Txt_QR" ColumnName="Txt_QR" />
+                <ScalarProperty Name="Txt_Token" ColumnName="Txt_Token" />
+                <ScalarProperty Name="Fec_Alta" ColumnName="Fec_Alta" />
+                <ScalarProperty Name="Num_Telefono" ColumnName="Num_Telefono" />
+                <ScalarProperty Name="Txt_Contraseña" ColumnName="Txt_Contraseña" />
+                <ScalarProperty Name="Txt_Nombre" ColumnName="Txt_Nombre" />
+                <ScalarProperty Name="Txt_Correo" ColumnName="Txt_Correo" />
+                <ScalarProperty Name="Int_IdRegistro" ColumnName="Int_IdRegistro" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tb_ListadoInvitados">
+            <EntityTypeMapping TypeName="FLHModel.Tb_ListadoInvitados">
+              <MappingFragment StoreEntitySet="Tb_ListadoInvitados">
+                <ScalarProperty Name="Bol_Vip" ColumnName="Bol_Vip" />
+                <ScalarProperty Name="Txt_Telefono" ColumnName="Txt_Telefono" />
+                <ScalarProperty Name="Txt_Password" ColumnName="Txt_Password" />
+                <ScalarProperty Name="Fec_Enviado" ColumnName="Fec_Enviado" />
+                <ScalarProperty Name="Num_Enviado" ColumnName="Num_Enviado" />
+                <ScalarProperty Name="Int_Status" ColumnName="Int_Status" />
+                <ScalarProperty Name="Txt_Nombre" ColumnName="Txt_Nombre" />
+                <ScalarProperty Name="Txt_Correo" ColumnName="Txt_Correo" />
+                <ScalarProperty Name="Int_IdInvitado" ColumnName="Int_IdInvitado" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
