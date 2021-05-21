@@ -397,9 +397,10 @@ namespace Queue.Controllers
 
             foreach (var invitado in listInvitados) {
 
-                if (invitado.Bol_Vip != true)
+                if (invitado.Bol_Vip == false)
                 {
-                if ( invitado.Int_Status != 1)
+
+                if ( invitado.Int_Status == 0)
                 {
                     string fecha = DateTime.Now.ToString("dddd MM yyyy");
 
@@ -413,7 +414,7 @@ namespace Queue.Controllers
                                                 MediaTypeNames.Text.Plain);
                     string html = "<body text-align: center;>" +
                         "<img src='cid:imagen' style='text-align:center;width:85%; height: 60%;' />" +
-                        " <a href='http://fbx40.com/' style='text-align: center;margin-left:33%; background:linear-gradient(to bottom, #dda60f 5%, #d36217 100%);background-color:#e6a313; border-radius:22px;border: 2px solid #cc8b11;display: inline-block;color:#ffffff;font-family:Arial;font-size:8px;padding: 10px 38px;text-decoration:none;text-shadow:0px 1px 0px #2f6627;'> <h2>Registro para el evento</h></a> " +
+                        " <a href='https://fbx40.azurewebsites.net' style='text-align: center;margin-left:33%; background:linear-gradient(to bottom, #dda60f 5%, #d36217 100%);background-color:#e6a313; border-radius:22px;border: 2px solid #cc8b11;display: inline-block;color:#ffffff;font-family:Arial;font-size:8px;padding: 10px 38px;text-decoration:none;text-shadow:0px 1px 0px #2f6627;'> <h2>Registro para el evento</h></a> " +
                         "<br>"+
                        "<h3 style ='text-align:center;'><strong> Para mayor información ponerse en contacto al siguente número:  +52 998 242 1114 </strong></h3>" +
                           "</body>";
@@ -449,9 +450,68 @@ namespace Queue.Controllers
                     envio.actualizarInvitado(numenviado,invitado.Int_IdInvitado,invitado.Txt_Correo);
 
                 }
-
-
                 }
+                if (invitado.Bol_Vip == true)
+                    {
+                        if (invitado.Int_Status == 0)
+                        {
+                            string fecha = DateTime.Now.ToString("dddd MM yyyy");
+
+                            string mailemisor2 = "fbx40tulum@gmail.com";
+                            string mailreceptor2 = invitado.Txt_Correo;
+                            string contraseña2 = "fabricio21";
+                            string text = "";
+                            AlternateView plainView =
+                                AlternateView.CreateAlternateViewFromString(text,
+                                                        Encoding.UTF8,
+                                                        MediaTypeNames.Text.Plain);
+                            string html = "<body text-align: center;>" +
+                                "<img src='cid:imagen' style='text-align:center;width:85%; height: 60%;' />" +
+                                " <a href='https://fbx40.azurewebsites.net' style='text-align: center;margin-left:33%; background:linear-gradient(to bottom, #dda60f 5%, #d36217 100%);background-color:#e6a313; border-radius:22px;border: 2px solid #cc8b11;display: inline-block;color:#ffffff;font-family:Arial;font-size:8px;padding: 10px 38px;text-decoration:none;text-shadow:0px 1px 0px #2f6627;'> <h2>Registro para el evento</h></a> " +
+                                "<h3><strong> Cena: Circle Vip</strong></h3>" +
+                               "<h3><strong> Lugar: Secret Location.</strong></h3>" +
+                               "<h3><strong> Hora: 7PM </strong></h3>" +
+                                "<br>" +
+                               "<h3 style ='text-align:center;'><strong> Para mayor información ponerse en contacto al siguente número:  +52 998 242 1114 </strong></h3>" +
+                             
+                                
+                                            "</body>";
+                            AlternateView htmlView =
+                                AlternateView.CreateAlternateViewFromString(html,
+                                                        Encoding.UTF8,
+                                                        MediaTypeNames.Text.Html);
+                            string Path = "\\Content\\Email.png";
+                            string rutafondo = Server.MapPath(Path);
+                            LinkedResource img =
+                                new LinkedResource(rutafondo,
+                                         MediaTypeNames.Image.Jpeg);
+                            img.ContentId = "imagen";
+                            htmlView.LinkedResources.Add(img);
+
+                            MailMessage msng2 = new MailMessage(mailemisor2, mailreceptor2, "Evento FBX40 " + fecha + " ", "");
+                            msng2.IsBodyHtml = true;
+                            msng2.AlternateViews.Add(htmlView);
+
+
+                            SmtpClient smtpClient2 = new SmtpClient("smtp.gmail.com");
+                            smtpClient2.EnableSsl = true;
+                            smtpClient2.UseDefaultCredentials = false;
+                            smtpClient2.Port = 587;
+                            smtpClient2.Credentials = new System.Net.NetworkCredential(mailemisor2, contraseña2);
+
+                            smtpClient2.Send(msng2);
+                            smtpClient2.Dispose();
+
+                            IAccount envio = new IAccount();
+                            int numIntento = 1;
+                            int numenviado = numIntento + Convert.ToInt32(invitado.Num_Enviado);
+                            envio.actualizarInvitado(numenviado, invitado.Int_IdInvitado, invitado.Txt_Correo);
+
+                        }
+
+                    }
+
+               
                 respuesta = "correos enviados";
             }
 
