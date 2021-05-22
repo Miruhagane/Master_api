@@ -390,6 +390,9 @@ namespace Queue.Controllers
         /// método para enviar correo a invitados 
         /// </summary>
         /// <returns></returns>
+        
+        
+        //CAMBIOS A SUBIR 
         public JsonResult mail()
         {
             string respuesta = "";
