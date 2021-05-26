@@ -336,6 +336,9 @@
     <Compile Include="Models\IRepository\IFLH\Tb_ListadoInvitados.cs">
       <DependentUpon>FLH.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\IRepository\IFLH\Tb_ListadoInvitadosteste.cs">
+      <DependentUpon>FLH.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\IRepository\IFLH\Tb_RegistroAcompañantes.cs">
       <DependentUpon>FLH.tt</DependentUpon>
     </Compile>

@@ -32,5 +32,6 @@ namespace Queue.Models.IRepository.IFLH
         public virtual DbSet<Tb_InvitadoAcompañante> Tb_InvitadoAcompañante { get; set; }
         public virtual DbSet<Tb_ListadoInvitados> Tb_ListadoInvitados { get; set; }
         public virtual DbSet<Tb_RegistroInvitados> Tb_RegistroInvitados { get; set; }
+        public virtual DbSet<Tb_ListadoInvitadosteste> Tb_ListadoInvitadosteste { get; set; }
     }
 }

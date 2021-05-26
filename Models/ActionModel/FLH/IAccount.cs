@@ -175,7 +175,7 @@ namespace Queue.Models.ActionModel.FLH
         }
 
 
-
+        //subir método
         public List<ListaInvitados> Invitados()
         {
             List<ListaInvitados> list = new List<ListaInvitados>();
@@ -201,62 +201,28 @@ namespace Queue.Models.ActionModel.FLH
             }
             return list;
         }
-
+        //subir método
         public List<Tb_RegistroInvitados> ListRegistroInvitados()
         {
             List<Tb_RegistroInvitados> lista = new List<Tb_RegistroInvitados>();
-            lista = db.Tb_RegistroInvitados.ToList();
+            // lista completa de invitado registrado
+            lista = db.Tb_RegistroInvitados.Where(x => x.Txt_QR != null  && x.Int_Status == 1).ToList();
 
-            //using (SqlConnection sql = new SqlConnection(con))
-            //{
-            //    sql.Open();
-            //    string query = "select Txt_Correo,Txt_QR from Tb_RegistroInvitados";
+            //solo para un invitado especial  cambiar el correo
+            // lista = db.Tb_RegistroInvitados.Where(x=>x.Txt_QR != "jcenteno@cecgruop.mx" && x.Int_Status == 1).ToList();
 
-            //    SqlDataAdapter da = new SqlDataAdapter(query, sql);
-            //    DataSet a = new DataSet();
-            //    da.Fill(a);
-            //    ListRegistroInvitados u = new ListRegistroInvitados();
-            //    for (int e = 0; e < a.Tables[0].Rows.Count; e++)
-            //    {
-            //        if (a.Tables[0].Rows.Count > 0)
-            //        {
-            //            u.Txt_Correo = a.Tables[0].Rows[e]["Txt_Correo"].ToString();
-            //             u.Txt_QR = a.Tables[0].Rows[e]["Txt_QR"].ToString();
-            //        }
-            //        lista.Add(u);
-            //    }
-            //    sql.Close();
-            //}
             return lista;
         }
+        //subir método
         public List<Tb_RegistroAcompañantes> ListRegistroAcompanantes()
         {
 
             List<Tb_RegistroAcompañantes> lista = new List<Tb_RegistroAcompañantes>();
-            lista = db.Tb_RegistroAcompañantes.ToList();
-            //using (SqlConnection sql = new SqlConnection(con))
-            //{
-            //    sql.Open();
-            //    string query = "select Txt_Correo,Txt_QR from Tb_RegistroAcompañantes";
-
-            //    SqlDataAdapter da = new SqlDataAdapter(query, sql);
-            //    DataSet a = new DataSet();
-            //    da.Fill(a);
-            //    ListRegistroAcompanante u = new ListRegistroAcompanante();
-            //    for (int e = 0; e < a.Tables[0].Rows.Count; e++)
-            //    {
-            //        if (a.Tables[0].Rows.Count > 0)
-            //        {
-            //            u.Txt_Correo = a.Tables[0].Rows[e]["Txt_Correo"].ToString();
-            //            u.Txt_QR = a.Tables[0].Rows[e]["Txt_QR"].ToString();
-            //        }
-            //        lista.Add(u);
-            //    }
-            //    sql.Close();
-            //}
+            lista = db.Tb_RegistroAcompañantes.Where(x=>x.Txt_QR !=null && x.Txt_Correo !=null && x.Int_Status==1) .ToList();
+           /// lista = db.Tb_RegistroAcompañantes.Where(x => x.Txt_QR != null && x.Txt_Correo =="jcenteno@cecgruop.mx" && x.Int_Status == 1).ToList();
             return lista;
         }
-
+        //subir método
         public Tb_EventosInvitado EventosInvitado(Tb_EventosInvitado eventosInvitado)
         {
             Tb_EventosInvitado tb_Eventos = new Tb_EventosInvitado();
@@ -283,7 +249,7 @@ namespace Queue.Models.ActionModel.FLH
 
             return tb_Eventos;
         }
-
+        //subir método
         public string actualizarInvitado(int numEnviado, int idInvitado, string Correo )
         {
             using (SqlConnection sql = new SqlConnection(con))
@@ -291,7 +257,7 @@ namespace Queue.Models.ActionModel.FLH
                 try
                 {
                     sql.Open();
-                    string query = "Update Tb_ListadoInvitados set Num_Enviado = " + numEnviado + " "+
+                    string query = "Update Tb_ListadoInvitados set Num_Enviado = " + numEnviado + " " +
                         "where Int_IdInvitado =" + Convert.ToInt32(idInvitado) +"";
 
                    
@@ -308,6 +274,55 @@ namespace Queue.Models.ActionModel.FLH
 
             return "actualizado";
         }
+        //subir método
+        public string actualizarRegistroInvitado(int Int_Status, int Int_IdRegistro, string Correo)
+        {
+            using (SqlConnection sql = new SqlConnection(con))
+            {
+                try
+                {
+                    sql.Open();
+                    string query = "Update Tb_RegistroInvitados set Int_Status = " + Int_Status + " " +
+                        "where Int_IdRegistro =" + Convert.ToInt32(Int_IdRegistro) + "";
 
+
+                    SqlCommand cmd = new SqlCommand(query, sql);
+                    cmd.ExecuteNonQuery();
+
+                }
+                catch (Exception ex)
+                {
+
+                    throw new Exception(ex.Message);
+                }
+            }
+
+            return "actualizado";
+        }
+        //subir método
+        public string actualizarRegistroAcompanante(int Int_Status, int Int_IdRegistro, string Correo)
+        {
+            using (SqlConnection sql = new SqlConnection(con))
+            {
+                try
+                {
+                    sql.Open();
+                    string query = "Update Tb_RegistroAcompañantes set Int_Status = " + Int_Status + " " +
+                        "where Int_IdRegistro =" + Convert.ToInt32(Int_IdRegistro) + "";
+
+
+                    SqlCommand cmd = new SqlCommand(query, sql);
+                    cmd.ExecuteNonQuery();
+
+                }
+                catch (Exception ex)
+                {
+
+                    throw new Exception(ex.Message);
+                }
+            }
+
+            return "actualizado";
+        }
     }
 }
