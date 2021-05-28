@@ -218,7 +218,7 @@ namespace Queue.Models.ActionModel.FLH
         {
 
             List<Tb_RegistroAcompañantes> lista = new List<Tb_RegistroAcompañantes>();
-            lista = db.Tb_RegistroAcompañantes.Where(x=>x.Txt_QR !=null && x.Txt_Correo !=null && x.Int_Status==1) .ToList();
+            lista = db.Tb_RegistroAcompañantes.Where(x=>x.Txt_Correo.Contains("@") && x.Int_Status == 1).ToList();
            /// lista = db.Tb_RegistroAcompañantes.Where(x => x.Txt_QR != null && x.Txt_Correo =="jcenteno@cecgruop.mx" && x.Int_Status == 1).ToList();
             return lista;
         }
@@ -233,7 +233,8 @@ namespace Queue.Models.ActionModel.FLH
                     sql.Open();
                     string query = "Update Tb_EventosInvitado set Bol_Evento1 = " + Convert.ToInt32(eventosInvitado.Bol_Evento1) + ", " +
                         "Bol_Evento2 = " + Convert.ToInt32(eventosInvitado.Bol_Evento2) + ", " +
-                        "Bol_Evento3 = " + Convert.ToInt32(eventosInvitado.Bol_Evento3) + " " +
+                        "Bol_Evento3 = " + Convert.ToInt32(eventosInvitado.Bol_Evento3) + "," +
+                         "Bol_Validado = " + Convert.ToInt32(eventosInvitado.Bol_Validado) + " " +
                         " where Int_IdInvitado =" + Convert.ToInt32(eventosInvitado.Int_IdInvitado) + "";
                     SqlCommand cmd = new SqlCommand(query, sql);
                     cmd.ExecuteNonQuery();
@@ -258,12 +259,13 @@ namespace Queue.Models.ActionModel.FLH
                 {
                     sql.Open();
                     string query = "Update Tb_ListadoInvitados set Num_Enviado = " + numEnviado + " " +
+                        ",Fec_Enviado = " + DateTime.Now + " " +
                         "where Int_IdInvitado =" + Convert.ToInt32(idInvitado) +"";
 
                    
                     SqlCommand cmd = new SqlCommand(query, sql);
                     cmd.ExecuteNonQuery();
-
+                    sql.Close();
                 }
                 catch (Exception ex)
                 {
@@ -288,7 +290,7 @@ namespace Queue.Models.ActionModel.FLH
 
                     SqlCommand cmd = new SqlCommand(query, sql);
                     cmd.ExecuteNonQuery();
-
+                    sql.Close();
                 }
                 catch (Exception ex)
                 {
@@ -313,7 +315,7 @@ namespace Queue.Models.ActionModel.FLH
 
                     SqlCommand cmd = new SqlCommand(query, sql);
                     cmd.ExecuteNonQuery();
-
+                    sql.Close();
                 }
                 catch (Exception ex)
                 {
