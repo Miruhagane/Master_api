@@ -258,8 +258,7 @@ namespace Queue.Models.ActionModel.FLH
                 try
                 {
                     sql.Open();
-                    string query = "Update Tb_ListadoInvitados set Num_Enviado = " + numEnviado + " " +
-                        ",Fec_Enviado = " + DateTime.Now + " " +
+                    string query = "Update Tb_ListadoInvitados set Num_Enviado = " + numEnviado + " " +                       
                         "where Int_IdInvitado =" + Convert.ToInt32(idInvitado) +"";
 
                    
