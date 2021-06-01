@@ -250,6 +250,34 @@ namespace Queue.Models.ActionModel.FLH
 
             return tb_Eventos;
         }
+
+        public Tb_EventosAcompañante EventosInvitadoAcompanante(Tb_EventosAcompañante eventosInvitado)
+        {
+            Tb_EventosAcompañante tb_Eventos = new Tb_EventosAcompañante();
+            using (SqlConnection sql = new SqlConnection(con))
+            {
+                try
+                {
+                    sql.Open();
+                    string query = "Update Tb_EventosAcompañante set Bol_Evento1 = " + Convert.ToInt32(eventosInvitado.Bol_Evento1) + ", " +
+                        "Bol_Evento2 = " + Convert.ToInt32(eventosInvitado.Bol_Evento2) + ", " +
+                        "Bol_Evento3 = " + Convert.ToInt32(eventosInvitado.Bol_Evento3) + "," +
+                         "Bol_Validado = " + Convert.ToInt32(eventosInvitado.Bol_Validado) + " " +
+                        " where Int_IdAcompañante =" + Convert.ToInt32(eventosInvitado.Int_IdAcompañante) + "";
+                    SqlCommand cmd = new SqlCommand(query, sql);
+                    cmd.ExecuteNonQuery();
+                    sql.Close();
+                }
+                catch (Exception ex)
+                {
+
+                    throw new Exception(ex.Message);
+                }
+                tb_Eventos = db.Tb_EventosAcompañante.FirstOrDefault(x => x.Int_IdAcompañante == eventosInvitado.Int_IdAcompañante);
+            }
+
+            return tb_Eventos;
+        }
         //subir método
         public string actualizarInvitado(int numEnviado, int idInvitado, string Correo )
         {

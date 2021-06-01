@@ -190,9 +190,67 @@ namespace Queue.Controllers
 
 
                 }
+                var datoAcompanante = db.Tb_RegistroAcompañantes.FirstOrDefault(x => x.Txt_QR == QR);
+                if (datoAcompanante != null)
+                {
+
+                    var diaInvitado = db.Tb_EventosAcompañante.FirstOrDefault(x => x.Int_IdAcompañante == datoAcompanante.Int_IdRegistro);
+                    //primer evento
+                    if (diaInvitado.Bol_Evento1 == true && dia == 1)
+                    {
+                        Tb_EventosAcompañante eventosInvitado = new Tb_EventosAcompañante
+                        {
+                            Int_IdRegistro = diaInvitado.Int_IdRegistro,
+                            Int_IdAcompañante = diaInvitado.Int_IdAcompañante,
+                            Bol_Evento1 = diaInvitado.Bol_Evento1,
+                            Bol_Evento2 = diaInvitado.Bol_Evento2,
+                            Bol_Evento3 = diaInvitado.Bol_Evento3,
+                            Bol_Validado = 1,
+                        };
+                        // método para enviar información actualización 
+                        var result = ac.EventosInvitadoAcompanante(eventosInvitado);
+
+                        return Json(result, JsonRequestBehavior.AllowGet);
+                    }
+                    //segundo dia del evento
+                    if (diaInvitado.Bol_Evento2 == true && dia == 2)
+                    {
+                        Tb_EventosAcompañante eventosInvitado = new Tb_EventosAcompañante
+                        {
+                            Int_IdRegistro = diaInvitado.Int_IdRegistro,
+                            Int_IdAcompañante = diaInvitado.Int_IdAcompañante,
+                            Bol_Evento1 = diaInvitado.Bol_Evento1,
+                            Bol_Evento2 = diaInvitado.Bol_Evento2,
+                            Bol_Evento3 = diaInvitado.Bol_Evento3,
+                            Bol_Validado = 2,
+                        };
+                        // método para enviar información actualización
+                        var result = ac.EventosInvitadoAcompanante(eventosInvitado);
+
+                        return Json(result, JsonRequestBehavior.AllowGet);
+                    }
+                    // tercer dia del evento 
+                    if (diaInvitado.Bol_Evento3 == true && dia == 3)
+                    {
+                        Tb_EventosAcompañante eventosInvitado = new Tb_EventosAcompañante
+                        {
+                            Int_IdRegistro = diaInvitado.Int_IdRegistro,
+                            Int_IdAcompañante = diaInvitado.Int_IdAcompañante,
+                            Bol_Evento1 = diaInvitado.Bol_Evento1,
+                            Bol_Evento2 = diaInvitado.Bol_Evento2,
+                            Bol_Evento3 = diaInvitado.Bol_Evento3,
+                            Bol_Validado = 3,
+                        };
+                        // método para enviar información actualización 
+                        var result = ac.EventosInvitadoAcompanante(eventosInvitado);
+
+                        return Json(result, JsonRequestBehavior.AllowGet);
+                    }
+
+                }
 
 
-            }
+                }
             catch (Exception ex)
             {
 
