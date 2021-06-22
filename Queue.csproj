@@ -361,6 +361,9 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Email.png" />
+    <Content Include="Content\eventos.jpeg" />
+    <Content Include="Content\final.png" />
+    <Content Include="Content\informativo.jpeg" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
