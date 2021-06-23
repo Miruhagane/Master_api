@@ -206,10 +206,10 @@ namespace Queue.Models.ActionModel.FLH
         {
             List<Tb_RegistroInvitados> lista = new List<Tb_RegistroInvitados>();
             // lista completa de invitado registrado
-            lista = db.Tb_RegistroInvitados.Where(x => x.Txt_QR != null  && x.Int_Status == 1).ToList();
+            lista = db.Tb_RegistroInvitados.Where(x => x.Txt_QR != null && x.Int_Status==1).ToList();
 
             //solo para un invitado especial  cambiar el correo
-            //lista = db.Tb_RegistroInvitados.Where(x=>x.Txt_Correo == "fbx32@gmail.com").ToList();
+          //  lista = db.Tb_RegistroInvitados.Where(x=>x.Txt_Correo == "ana_ro35@hotmail.com").ToList();
 
             return lista;
         }
@@ -218,8 +218,9 @@ namespace Queue.Models.ActionModel.FLH
         {
 
             List<Tb_RegistroAcompañantes> lista = new List<Tb_RegistroAcompañantes>();
-          lista = db.Tb_RegistroAcompañantes.Where(x=> x.Txt_Correo.Contains("@") && x.Int_Status == 1).ToList();
-         // lista = db.Tb_RegistroAcompañantes.Where(x => x.Txt_QR != null && x.Txt_Correo == "guilleemoeduardoamengual@gmail.com ").ToList();
+            //lista = db.Tb_RegistroAcompañantes.ToList();
+            lista = db.Tb_RegistroAcompañantes.Where(x => x.Txt_Correo.Contains("@") && x.Int_Status == 1).ToList();
+           // lista = db.Tb_RegistroAcompañantes.Where(x => x.Txt_Correo == "ana_ro35@hotmail.com").ToList();
             return lista;
         }
         //subir método
@@ -314,7 +315,7 @@ namespace Queue.Models.ActionModel.FLH
                 {
                     
                     sql.Open();
-                    string query = "Update Tb_RegistroInvitados set Txt_Motivo = 'Lista Naranja' where Int_IdRegistro =" + Convert.ToInt32(Int_IdRegistro) + "";
+                    string query = "Update Tb_RegistroInvitados set Txt_Motivo = 'Envio Whatsapp',Int_Status=2 where Int_IdRegistro =" + Convert.ToInt32(Int_IdRegistro) + "";
 
 
                     SqlCommand cmd = new SqlCommand(query, sql);

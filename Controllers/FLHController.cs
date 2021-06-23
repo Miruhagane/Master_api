@@ -47,6 +47,33 @@ namespace Queue.Controllers
         /// <returns></returns>
 
 
+        public JsonResult ListaConfirmado(string lista)
+        {
+            try
+            {
+                var datoPersona = db.Tb_RegistroInvitados.Join(
+                    db.Tb_EventosInvitado,
+                    res => res.Int_IdRegistro,
+                    eve => eve.Int_IdInvitado,
+                    (res, eve) => new
+                    {
+                        res.Txt_Nombre,
+                        res.Txt_NombreAcompañante,
+                        eve.Bol_Validado,
+                        res.Int_Status
+                    }
+                   ).Where(x=>x.Int_Status==2).ToList();
+
+
+                return Json(datoPersona, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+        }
         public JsonResult buscarPorNomTel(string nombre)
         {
             try
@@ -545,7 +572,7 @@ namespace Queue.Controllers
             {
 
                 ///  var Invitado = db.Tb_ListadoInvitados.Where(x => x.Txt_Correo.ToUpper() == correo.ToUpper());
-                var Invitado = db.Tb_RegistroInvitados.Where(x => x.Txt_QR !=null && x.Int_Status==2 && x.Int_IdRegistro > 60).ToList();
+                var Invitado = db.Tb_RegistroInvitados.Where(x =>  x.Int_Status==1).ToList();
                 if (Invitado != null)
                 {
                     foreach (var invitado in Invitado)
@@ -920,7 +947,7 @@ namespace Queue.Controllers
                 string qrcodePath = "";
                 foreach (var item in u)
                 {
-                    string cadenaQr = item.Txt_QR;
+                    string cadenaQr = item.Txt_Nombre;
                     string imagePath = "~/Images/" + cadenaQr + ".jpg";
                     string rutaQr = Server.MapPath(imagePath);
                     if (System.IO.File.Exists(rutaQr))
@@ -944,7 +971,7 @@ namespace Queue.Controllers
                             Width = 300
                         }
                     };
-                    var result = barcodeWriter.Write(cadenaQr);
+                    var result = barcodeWriter.Write(item.Txt_QR);
                     string barcodePath = Server.MapPath(imagePath);
                     var barcodeBitmap = new Bitmap(result);
 
@@ -959,52 +986,52 @@ namespace Queue.Controllers
                         }
                     }
 
-                    string text = "";
-                    AlternateView plainView = AlternateView.CreateAlternateViewFromString(text, Encoding.UTF8, MediaTypeNames.Text.Plain);
-                    string platilla = "<!DOCTYPE html>" +
-                        "<html lang = 'en'>" +
-                        "<head><meta charset = 'UTF-8' ></head >" +
-                        "<style>" +
-                        ".bodycont{width: 64rem;max-height: fit-content;" +
-                        "height:52rem;align-items: flex-end; display: flex;}" +
-                        ".image{position: absolute;height: 15rem;width: 15rem;margin - bottom: 1rem;top: 18rem;left: 13rem;z-index: 1;}" +
-                         ".image2{position:absolute;height:35rem; width:40rem;z-index:-1;}" +
-                        "</style>" +
-                        "<body style='text-align: center; '>" +
-                        "<DIV STYLE = 'position:absolute; top:36px; left:240px; visibility:visible z-index:-1' >" +
-                        "<IMG SRC='cid:imagenFondo' height='250px' width='600px'></div>" +
-                        "<DIV STYLE ='text-align:center;position:absolute; top:287px; left:462px; visibility:visible z-index:1'>" +
-                        "<IMG height='160px' width='160px' SRC='cid:imagen'></div>" +
-                         "<br>" +
-                          "<h3 style ='text-align:center;'><strong> Sigue las actualizaciones en el sitio web, para duda o información comunicarse al WhatsApp:  +52 998 242 1114 </strong></h3>" +
-                        "</body></html>";
-                    AlternateView htmlView = AlternateView.CreateAlternateViewFromString(platilla, Encoding.UTF8, MediaTypeNames.Text.Html);
-                    string imagePath2 = "~\\Images\\emialQR2.png";
-                    string rutafondo = Server.MapPath(imagePath2);
-                    LinkedResource img2 = new LinkedResource(rutafondo, MediaTypeNames.Image.Jpeg);
-                    img2.ContentId = "imagenFondo";
-                    htmlView.LinkedResources.Add(img2);
-                    // para obtener el qr
-                    string imageQr = "~\\Images\\" + cadenaQr + ".jpg";
-                    qrcodePath = Server.MapPath(imageQr);
-                    LinkedResource img = new LinkedResource(qrcodePath, MediaTypeNames.Image.Jpeg);
-                    img.ContentId = "imagen";
-                    htmlView.LinkedResources.Add(img);
+                    //string text = "";
+                    //AlternateView plainView = AlternateView.CreateAlternateViewFromString(text, Encoding.UTF8, MediaTypeNames.Text.Plain);
+                    //string platilla = "<!DOCTYPE html>" +
+                    //    "<html lang = 'en'>" +
+                    //    "<head><meta charset = 'UTF-8' ></head >" +
+                    //    "<style>" +
+                    //    ".bodycont{width: 64rem;max-height: fit-content;" +
+                    //    "height:52rem;align-items: flex-end; display: flex;}" +
+                    //    ".image{position: absolute;height: 15rem;width: 15rem;margin - bottom: 1rem;top: 18rem;left: 13rem;z-index: 1;}" +
+                    //     ".image2{position:absolute;height:35rem; width:40rem;z-index:-1;}" +
+                    //    "</style>" +
+                    //    "<body style='text-align: center; '>" +
+                    //    "<DIV STYLE = 'position:absolute; top:36px; left:240px; visibility:visible z-index:-1' >" +
+                    //    "<IMG SRC='cid:imagenFondo' height='250px' width='600px'></div>" +
+                    //    "<DIV STYLE ='text-align:center;position:absolute; top:287px; left:462px; visibility:visible z-index:1'>" +
+                    //    "<IMG height='160px' width='160px' SRC='cid:imagen'></div>" +
+                    //     "<br>" +
+                    //      "<h3 style ='text-align:center;'><strong> Sigue las actualizaciones en el sitio web, para duda o información comunicarse al WhatsApp:  +52 998 242 1114 </strong></h3>" +
+                    //    "</body></html>";
+                    //AlternateView htmlView = AlternateView.CreateAlternateViewFromString(platilla, Encoding.UTF8, MediaTypeNames.Text.Html);
+                    //string imagePath2 = "~\\Images\\emialQR2.png";
+                    //string rutafondo = Server.MapPath(imagePath2);
+                    //LinkedResource img2 = new LinkedResource(rutafondo, MediaTypeNames.Image.Jpeg);
+                    //img2.ContentId = "imagenFondo";
+                    //htmlView.LinkedResources.Add(img2);
+                    //para obtener el qr
+                    //string imageQr = "~\\Images\\" + cadenaQr + ".jpg";
+                    //qrcodePath = Server.MapPath(imageQr);
+                    //LinkedResource img = new LinkedResource(qrcodePath, MediaTypeNames.Image.Jpeg);
+                    //img.ContentId = "imagen";
+                    //htmlView.LinkedResources.Add(img);
 
                     //cambiar el seteo para enviar todo las variables
-                    mailreceptor2 = item.Txt_Correo; //"jcenteno@cecgroup.mx";
+                    //mailreceptor2 = item.Txt_Correo; //"jcenteno@cecgroup.mx";
 
-                    MailMessage msg = new MailMessage(mailemisor2, mailreceptor2, "Evento FBX40 25,26 y 27 de junio", "");
-                    msg.IsBodyHtml = true;
-                    msg.AlternateViews.Add(htmlView);
-                    SmtpClient client = new SmtpClient("smtp.gmail.com");
-                    client.EnableSsl = true;
-                    client.UseDefaultCredentials = false;
-                    client.Port = 587;
-                    client.Credentials = new System.Net.NetworkCredential(mailemisor2, contraseña2);
-                    client.Send(msg);
-                    client.Dispose();
-                    res = msg;
+                    //MailMessage msg = new MailMessage(mailemisor2, mailreceptor2, "Evento FBX40 25,26 y 27 de junio", "");
+                    //msg.IsBodyHtml = true;
+                    //msg.AlternateViews.Add(htmlView);
+                    //SmtpClient client = new SmtpClient("smtp.gmail.com");
+                    //client.EnableSsl = true;
+                    //client.UseDefaultCredentials = false;
+                    //client.Port = 587;
+                    //client.Credentials = new System.Net.NetworkCredential(mailemisor2, contraseña2);
+                    //client.Send(msg);
+                    //client.Dispose();
+                    //res = msg;
 
                     a.actualizarRegistroInvitado(2, item.Int_IdRegistro, "Envio Whatsapp");
 
@@ -1035,8 +1062,8 @@ namespace Queue.Controllers
             string qrcodePath = "";
             foreach (var item in u)
             {
-                string cadenaQr = item.Txt_QR;
-                string imagePath = "~/Images/AcompaVerdad/" + cadenaQr + ".jpg";
+                string cadenaQr = item.Txt_Nombre;
+                string imagePath = "~/Images/" + cadenaQr + ".jpg";
                 string rutaQr = Server.MapPath(imagePath);
                 if (System.IO.File.Exists(rutaQr))
                 {
@@ -1059,7 +1086,7 @@ namespace Queue.Controllers
                         Width = 300
                     }
                 };
-                var result = barcodeWriter.Write(cadenaQr);
+                var result = barcodeWriter.Write(item.Txt_QR);
                 string barcodePath = Server.MapPath(imagePath);
                 var barcodeBitmap = new Bitmap(result);
 
@@ -1074,52 +1101,52 @@ namespace Queue.Controllers
                     }
                 }
 
-                    string text = "";
-                    AlternateView plainView = AlternateView.CreateAlternateViewFromString(text, Encoding.UTF8, MediaTypeNames.Text.Plain);
-                    string platilla = "<!DOCTYPE html>" +
-                        "<html lang = 'en'>" +
-                        "<head><meta charset = 'UTF-8' ></head >" +
-                        "<style>" +
-                        ".bodycont{width: 64rem;max-height: fit-content;" +
-                        "height:52rem;align-items: flex-end; display: flex;}" +
-                        ".image{position: absolute;height: 15rem;width: 15rem;margin - bottom: 1rem;top: 18rem;left: 13rem;z-index: 1;}" +
-                         ".image2{position:absolute;height:35rem; width:40rem;z-index:-1;}" +
-                        "</style>" +
-                        "<body style='text-align: center; '>" +
-                        "<DIV STYLE = 'position:absolute; top:36px; left:240px; visibility:visible z-index:-1' >" +
-                        "<IMG SRC='cid:imagenFondo' height='250px' width='600px'></div>" +
-                        "<DIV STYLE ='text-align:center;position:absolute; top:287px; left:462px; visibility:visible z-index:1'>" +
-                        "<IMG height='160px' width='160px' SRC='cid:imagen'></div>" +
-                         "<br>" +
-                          "<h3 style ='text-align:center;'><strong>Sigue las actualizaciones en el sitio web, para duda o información comunicarse al WhatsApp:  +52 998 242 1114 </strong></h3>" +
-                        "</body></html>";
-                    AlternateView htmlView = AlternateView.CreateAlternateViewFromString(platilla, Encoding.UTF8, MediaTypeNames.Text.Html);
-                    string imagePath2 = "~\\Images\\emialQR2.png";
-                    string rutafondo = Server.MapPath(imagePath2);
-                    LinkedResource img2 = new LinkedResource(rutafondo, MediaTypeNames.Image.Jpeg);
-                    img2.ContentId = "imagenFondo";
-                    htmlView.LinkedResources.Add(img2);
-                    // para obtener el qr
-                    string imageQr = "~\\Images\\" + cadenaQr + ".jpg";
-                    qrcodePath = Server.MapPath(imageQr);
-                    LinkedResource img = new LinkedResource(qrcodePath, MediaTypeNames.Image.Jpeg);
-                    img.ContentId = "imagen";
-                    htmlView.LinkedResources.Add(img);
+                    //string text = "";
+                    //AlternateView plainView = AlternateView.CreateAlternateViewFromString(text, Encoding.UTF8, MediaTypeNames.Text.Plain);
+                    //string platilla = "<!DOCTYPE html>" +
+                    //    "<html lang = 'en'>" +
+                    //    "<head><meta charset = 'UTF-8' ></head >" +
+                    //    "<style>" +
+                    //    ".bodycont{width: 64rem;max-height: fit-content;" +
+                    //    "height:52rem;align-items: flex-end; display: flex;}" +
+                    //    ".image{position: absolute;height: 15rem;width: 15rem;margin - bottom: 1rem;top: 18rem;left: 13rem;z-index: 1;}" +
+                    //     ".image2{position:absolute;height:35rem; width:40rem;z-index:-1;}" +
+                    //    "</style>" +
+                    //    "<body style='text-align: center; '>" +
+                    //    "<DIV STYLE = 'position:absolute; top:36px; left:240px; visibility:visible z-index:-1' >" +
+                    //    "<IMG SRC='cid:imagenFondo' height='250px' width='600px'></div>" +
+                    //    "<DIV STYLE ='text-align:center;position:absolute; top:287px; left:462px; visibility:visible z-index:1'>" +
+                    //    "<IMG height='160px' width='160px' SRC='cid:imagen'></div>" +
+                    //     "<br>" +
+                    //      "<h3 style ='text-align:center;'><strong>Sigue las actualizaciones en el sitio web, para duda o información comunicarse al WhatsApp:  +52 998 242 1114 </strong></h3>" +
+                    //    "</body></html>";
+                    //AlternateView htmlView = AlternateView.CreateAlternateViewFromString(platilla, Encoding.UTF8, MediaTypeNames.Text.Html);
+                    //string imagePath2 = "~\\Images\\emialQR2.png";
+                    //string rutafondo = Server.MapPath(imagePath2);
+                    //LinkedResource img2 = new LinkedResource(rutafondo, MediaTypeNames.Image.Jpeg);
+                    //img2.ContentId = "imagenFondo";
+                    //htmlView.LinkedResources.Add(img2);
+                    //// para obtener el qr
+                    //string imageQr = "~\\Images\\" + cadenaQr + ".jpg";
+                    //qrcodePath = Server.MapPath(imageQr);
+                    //LinkedResource img = new LinkedResource(qrcodePath, MediaTypeNames.Image.Jpeg);
+                    //img.ContentId = "imagen";
+                    //htmlView.LinkedResources.Add(img);
 
-                    //cambiar el seteo para enviar todo las variables
-                    mailreceptor2 = item.Txt_Correo; //"jcenteno@cecgroup.mx";
+                    ////cambiar el seteo para enviar todo las variables
+                    //mailreceptor2 = item.Txt_Correo; //"jcenteno@cecgroup.mx";
 
-                    MailMessage msg = new MailMessage(mailemisor2, mailreceptor2, "Evento FBX40 25,26 y 27 de junio", "");
-                    msg.IsBodyHtml = true;
-                    msg.AlternateViews.Add(htmlView);
-                    SmtpClient client = new SmtpClient("smtp.gmail.com");
-                    client.EnableSsl = true;
-                    client.UseDefaultCredentials = false;
-                    client.Port = 587;
-                    client.Credentials = new System.Net.NetworkCredential(mailemisor2, contraseña2);
-                    client.Send(msg);
-                    client.Dispose();
-                    res = msg;
+                    //MailMessage msg = new MailMessage(mailemisor2, mailreceptor2, "Evento FBX40 25,26 y 27 de junio", "");
+                    //msg.IsBodyHtml = true;
+                    //msg.AlternateViews.Add(htmlView);
+                    //SmtpClient client = new SmtpClient("smtp.gmail.com");
+                    //client.EnableSsl = true;
+                    //client.UseDefaultCredentials = false;
+                    //client.Port = 587;
+                    //client.Credentials = new System.Net.NetworkCredential(mailemisor2, contraseña2);
+                    //client.Send(msg);
+                    //client.Dispose();
+                    //res = msg;
 
                     a.actualizarRegistroAcompanante(2, item.Int_IdRegistro, item.Txt_Correo);
 
