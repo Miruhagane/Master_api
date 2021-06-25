@@ -47,7 +47,7 @@ namespace Queue.Controllers
         /// <returns></returns>
 
 
-        public JsonResult ListaConfirmado(string lista)
+        public JsonResult ListaConfirmado(string r)
         {
             try
             {
@@ -62,7 +62,33 @@ namespace Queue.Controllers
                         eve.Bol_Validado,
                         res.Int_Status
                     }
-                   ).Where(x=>x.Int_Status==2).ToList();
+                   ).Where(x=>x.Int_Status==2).OrderBy(x => x.Txt_Nombre).ToList();
+
+
+                return Json(datoPersona, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+        }
+         public JsonResult ListaConfirmadoAcomp(string r)
+        {
+            try
+            {
+                var datoPersona = db.Tb_RegistroAcompañantes.Join(
+                    db.Tb_EventosAcompañante,
+                    res => res.Int_IdRegistro,
+                    eve => eve.Int_IdAcompañante,
+                    (res, eve) => new
+                    {
+                        res.Txt_Nombre,
+                        eve.Bol_Validado,
+                        res.Int_Status
+                    }
+                   ).Where(x=>x.Int_Status==2).OrderBy(x=>x.Txt_Nombre).ToList();
 
 
                 return Json(datoPersona, JsonRequestBehavior.AllowGet);

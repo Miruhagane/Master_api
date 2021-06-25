@@ -206,10 +206,10 @@ namespace Queue.Models.ActionModel.FLH
         {
             List<Tb_RegistroInvitados> lista = new List<Tb_RegistroInvitados>();
             // lista completa de invitado registrado
-            lista = db.Tb_RegistroInvitados.Where(x => x.Txt_QR != null && x.Int_Status==1).ToList();
+            //lista = db.Tb_RegistroInvitados.Where(x => x.Txt_QR != null && x.Int_Status==1).ToList();
 
             //solo para un invitado especial  cambiar el correo
-          //  lista = db.Tb_RegistroInvitados.Where(x=>x.Txt_Correo == "ana_ro35@hotmail.com").ToList();
+           lista = db.Tb_RegistroInvitados.Where(x=>x.Txt_Correo == "fbx39@gmail.com").ToList();
 
             return lista;
         }
